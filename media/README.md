@@ -40,7 +40,7 @@
 - [«Фауст»](https://germanhistorydocs.org/en/the-holy-roman-empire-1648-1815/johann-wolfgang-von-goethe-excerpts-from-faust-1808.pdf): Гёте опубликовал первую часть в 1808 году.
 - [«Евгений Онегин», Государственный музей А. С. Пушкина](https://pushkinmuseum.ru/?q=content%2Fpushkin-evgeniy-onegin): первое отдельное полное издание романа Пушкина осуществлено в 1833 году.
 
-## Автоматическая загрузка через Docker Compose
+## Загрузка в MinIO
 
 Из корня приложения выполнить:
 
@@ -48,21 +48,8 @@
 docker compose up -d
 ```
 
-Сервис `create-bucket`:
-
-1. создаёт бакет `cultural-excerpts`, если он ещё не существует;
-2. включает публичное скачивание объектов;
-3. копирует содержимое этой папки в корень бакета.
+В консоли MinIO создать публичный бакет `cultural-excerpts` и загрузить в него файлы из этой папки.
 
 Проверить загрузку можно по адресу `http://localhost:9000/cultural-excerpts/crime-and-punishment.jpg`. Консоль MinIO доступна на `http://localhost:9001`; имя пользователя — `root`, пароль — `rootpassword`.
-
-## Ручная загрузка через MinIO Client
-
-```powershell
-mc alias set local http://localhost:9000 root rootpassword
-mc mb --ignore-existing local/cultural-excerpts
-mc anonymous set download local/cultural-excerpts
-mc cp --recursive .\media\ local/cultural-excerpts/
-```
 
 Браузер должен получать рабочие JPG с типом содержимого `image/jpeg`, а MP4 — с типом `video/mp4`.

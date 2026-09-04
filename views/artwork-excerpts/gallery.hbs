@@ -12,7 +12,6 @@
       <a class="brand" href="/artwork-excerpts">КУЛЬТУРНЫЙ СЛЕД</a>
       <p class="eyebrow">КОЛЛЕКЦИЯ</p>
       <h1>Отрывки произведений</h1>
-      <p>Литература и драматургия, которые продолжают влиять на культуру.</p>
     </header>
 
     <form class="filter" action="/artwork-excerpts" method="get">
@@ -21,19 +20,16 @@
         <input id="publicationYear" type="number" name="publicationYear" value="{{publicationYear}}" placeholder="Например, 1866">
       </label>
       <button class="button button--dark" type="submit">Найти</button>
-      <a class="button button--text" href="/artwork-excerpts">Сбросить</a>
     </form>
 
     <section class="gallery" aria-label="Опубликованные отрывки">
       {{#each excerpts}}
-        <a class="gallery-card" href="/artwork-excerpts/feed/{{this.id}}">
+        <a class="gallery-card" href="/artwork-excerpts/feed/{{this.id}}" data-video-url="{{this.videoUrl}}">
           <div class="gallery-card__image-wrap">
             <img class="gallery-card__image" src="{{this.imageUrl}}" alt="Обложка произведения {{this.workTitle}}">
-            <span class="gallery-card__type">{{this.workType}}</span>
           </div>
           <div class="gallery-card__body">
             <h2>{{this.workTitle}}</h2>
-            <p>{{this.creatorName}}</p>
             <div class="gallery-card__meta">
               <span>{{this.publicationYear}}</span>
               <span>♥ {{this.likeCount}}</span>

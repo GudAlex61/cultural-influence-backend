@@ -1,5 +1,5 @@
 :root {
-  /* Три основных цвета взяты за основу из стилистики портала Культура.РФ. */
+  /* Культура.РФ: цвета #3C3C3C, #FFFFFF, #ED2324, крупные медиа, редакционная типографика, форма карточек и hover. */
   --culture-black: #3c3c3c;
   --culture-white: #ffffff;
   --culture-red: #ed2324;
@@ -103,14 +103,6 @@ textarea {
   line-height: 1;
 }
 
-.page-header p:last-child {
-  max-width: 350px;
-  margin: 0;
-  color: rgba(60, 60, 60, 0.75);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
 .feed-page {
   position: relative;
   height: calc(100vh - 70px);
@@ -203,6 +195,15 @@ textarea {
   margin: 10px 0 0;
 }
 
+.details-less,
+.excerpt-details[open] .details-more {
+  display: none;
+}
+
+.excerpt-details[open] .details-less {
+  display: inline;
+}
+
 .feed-card__actions {
   display: flex;
   align-items: center;
@@ -250,19 +251,6 @@ textarea {
 
 .button--dark:hover {
   background: var(--culture-black);
-}
-
-.button--text {
-  min-height: 36px;
-  padding: 0 5px;
-  color: var(--culture-red);
-}
-
-.button--disabled {
-  width: 100%;
-  background: rgba(60, 60, 60, 0.2);
-  color: rgba(60, 60, 60, 0.7);
-  cursor: not-allowed;
 }
 
 .draft-card {
@@ -340,12 +328,6 @@ textarea {
   margin-bottom: 0;
 }
 
-.filter .button--text {
-  grid-column: 1 / -1;
-  justify-self: start;
-  margin-top: 5px;
-}
-
 .gallery {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -384,17 +366,6 @@ textarea {
   transform: scale(1.04);
 }
 
-.gallery-card__type {
-  position: absolute;
-  right: 7px;
-  bottom: 7px;
-  padding: 4px 6px;
-  background: var(--culture-red);
-  color: var(--culture-white);
-  font-size: 10px;
-  font-weight: 700;
-}
-
 .gallery-card__body {
   padding: 9px 5px 8px;
 }
@@ -406,19 +377,10 @@ textarea {
   line-height: 1.05;
 }
 
-.gallery-card p {
-  margin: 0;
-  overflow: hidden;
-  color: rgba(60, 60, 60, 0.75);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .gallery-card__meta {
   display: flex;
   justify-content: space-between;
-  margin-top: 9px;
+  margin-top: 8px;
   font-size: 12px;
   font-weight: 700;
 }

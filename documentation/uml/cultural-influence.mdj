@@ -100,6 +100,90 @@
           "name": "Изменить статус заявки"
         },
         {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestGallery001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestGallery0001=", "_parent": { "$ref": "AssocGuestGallery001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndGalleryGuest0001=", "_parent": { "$ref": "AssocGuestGallery001=" }, "reference": { "$ref": "AAAAAAGalleryUseCase01=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestFilter0001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestFilter00001=", "_parent": { "$ref": "AssocGuestFilter0001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndFilterGuest00001=", "_parent": { "$ref": "AssocGuestFilter0001=" }, "reference": { "$ref": "AAAAAAFilterUseCase001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestOpen000001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestOpen000001=", "_parent": { "$ref": "AssocGuestOpen000001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndOpenGuest000001=", "_parent": { "$ref": "AssocGuestOpen000001=" }, "reference": { "$ref": "AAAAAAOpenUseCase0001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestNext000001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestNext000001=", "_parent": { "$ref": "AssocGuestNext000001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndNextGuest000001=", "_parent": { "$ref": "AssocGuestNext000001=" }, "reference": { "$ref": "AAAAAANextUseCase0001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestDraft00001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestDraft00001=", "_parent": { "$ref": "AssocGuestDraft00001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndDraftGuest00001=", "_parent": { "$ref": "AssocGuestDraft00001=" }, "reference": { "$ref": "AAAAAADraftUseCase001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocGuestFill000001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndGuestFill000001=", "_parent": { "$ref": "AssocGuestFill000001=" }, "reference": { "$ref": "AAAAAAGuestActor00001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndFillGuest000001=", "_parent": { "$ref": "AssocGuestFill000001=" }, "reference": { "$ref": "AAAAAAFillUseCase0001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocRequesterAuth01=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndRequesterAuth001=", "_parent": { "$ref": "AssocRequesterAuth01=" }, "reference": { "$ref": "AAAAAARequester000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndAuthRequester001=", "_parent": { "$ref": "AssocRequesterAuth01=" }, "reference": { "$ref": "AAAAAAAuthUseCase0001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocRequesterReq001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndRequesterReq0001=", "_parent": { "$ref": "AssocRequesterReq001=" }, "reference": { "$ref": "AAAAAARequester000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndReqRequester0001=", "_parent": { "$ref": "AssocRequesterReq001=" }, "reference": { "$ref": "AAAAAARequestUseCase01=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocRequesterOwn001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndRequesterOwn0001=", "_parent": { "$ref": "AssocRequesterOwn001=" }, "reference": { "$ref": "AAAAAARequester000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndOwnRequester0001=", "_parent": { "$ref": "AssocRequesterOwn001=" }, "reference": { "$ref": "AAAAAAOwnReqUseCase001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocRequesterCalc01=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndRequesterCalc001=", "_parent": { "$ref": "AssocRequesterCalc01=" }, "reference": { "$ref": "AAAAAARequester000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndCalcRequester001=", "_parent": { "$ref": "AssocRequesterCalc01=" }, "reference": { "$ref": "AAAAAACalcUseCase0001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocModeratorAll001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndModeratorAll0001=", "_parent": { "$ref": "AssocModeratorAll001=" }, "reference": { "$ref": "AAAAAAModerator000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndAllModerator0001=", "_parent": { "$ref": "AssocModeratorAll001=" }, "reference": { "$ref": "AAAAAAAllReqUseCase001=" } }
+        },
+        {
+          "_type": "UMLAssociation",
+          "_id": "AssocModeratorMod001=",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": { "_type": "UMLAssociationEnd", "_id": "EndModeratorMod0001=", "_parent": { "$ref": "AssocModeratorMod001=" }, "reference": { "$ref": "AAAAAAModerator000001=" } },
+          "end2": { "_type": "UMLAssociationEnd", "_id": "EndModModerator0001=", "_parent": { "$ref": "AssocModeratorMod001=" }, "reference": { "$ref": "AAAAAAModReqUseCase001=" } }
+        },
+        {
           "_type": "UMLUseCaseDiagram",
           "_id": "AAAAAADiagramUseCase01=",
           "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
@@ -254,6 +338,126 @@
               "top": 560,
               "width": 200,
               "height": 70
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestGallery0001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestGallery001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAAGalleryUCView001=" },
+              "lineStyle": 1,
+              "points": "120:150;220:95"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestFilter00001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestFilter0001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAAFilterUCView0001=" },
+              "lineStyle": 1,
+              "points": "120:145;460:95"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestOpen000001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestOpen000001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAAOpenUCView00001=" },
+              "lineStyle": 1,
+              "points": "120:170;220:190"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestNext000001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestNext000001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAANextUCView00001=" },
+              "lineStyle": 1,
+              "points": "120:175;460:190"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestDraft00001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestDraft00001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAADraftUCView0001=" },
+              "lineStyle": 1,
+              "points": "120:190;220:285"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewGuestFill000001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocGuestFill000001=" },
+              "tail": { "$ref": "AAAAAAGuestActorView1=" },
+              "head": { "$ref": "AAAAAAFillUCView00001=" },
+              "lineStyle": 1,
+              "points": "120:195;490:285"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewRequesterAuth001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocRequesterAuth01=" },
+              "tail": { "$ref": "AAAAAARequesterView01=" },
+              "head": { "$ref": "AAAAAAAuthUCView00001=" },
+              "lineStyle": 1,
+              "points": "150:340;220:405"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewRequesterReq0001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocRequesterReq001=" },
+              "tail": { "$ref": "AAAAAARequesterView01=" },
+              "head": { "$ref": "AAAAAARequestUCView001=" },
+              "lineStyle": 1,
+              "points": "150:345;460:405"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewRequesterOwn0001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocRequesterOwn001=" },
+              "tail": { "$ref": "AAAAAARequesterView01=" },
+              "head": { "$ref": "AAAAAAOwnReqUCView0001=" },
+              "lineStyle": 1,
+              "points": "150:365;220:500"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewRequesterCalc001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocRequesterCalc01=" },
+              "tail": { "$ref": "AAAAAARequesterView01=" },
+              "head": { "$ref": "AAAAAACalcUCView00001=" },
+              "lineStyle": 1,
+              "points": "150:370;460:500"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewModeratorAll0001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocModeratorAll001=" },
+              "tail": { "$ref": "AAAAAAModeratorView01=" },
+              "head": { "$ref": "AAAAAAAllReqUCView0001=" },
+              "lineStyle": 1,
+              "points": "140:520;220:595"
+            },
+            {
+              "_type": "UMLAssociationView",
+              "_id": "ViewModeratorMod0001=",
+              "_parent": { "$ref": "AAAAAADiagramUseCase01=" },
+              "model": { "$ref": "AssocModeratorMod001=" },
+              "tail": { "$ref": "AAAAAAModeratorView01=" },
+              "head": { "$ref": "AAAAAAModReqUCView0001=" },
+              "lineStyle": 1,
+              "points": "140:525;460:595"
             }
           ]
         }
@@ -261,4 +465,3 @@
     }
   ]
 }
-

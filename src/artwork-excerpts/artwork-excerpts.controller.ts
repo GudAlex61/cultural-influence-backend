@@ -6,23 +6,11 @@ import {
   Query,
   Render,
 } from '@nestjs/common';
-import {
-  ArtworkExcerpt,
-  artworkExcerpts,
-  ExcerptStatus,
-} from './artwork-excerpt.model';
-
-interface ExcerptView extends ArtworkExcerpt {
-  imageUrl: string;
-  videoUrl: string;
-  likeCount: number;
-}
+import { ArtworkExcerpt, artworkExcerpts, ExcerptStatus } from './artwork-excerpt.model';
 
 @Controller('artwork-excerpts')
 export class ArtworkExcerptsController {
-  private readonly minioPublicUrl =
-    process.env.MINIO_PUBLIC_URL ??
-    'http://localhost:9000/cultural-excerpts';
+  private readonly minioPublicUrl = 'http://localhost:9000/cultural-excerpts';
 
   // GET /artwork-excerpts/feed, GET /artwork-excerpts/feed/:id и ?next=true.
   @Get(['feed', 'feed/:id'])
@@ -53,7 +41,6 @@ export class ArtworkExcerptsController {
 
     return {
       title: 'Лента — Культурный след',
-      excerpt: orderedExcerpts[0],
       excerpts: orderedExcerpts,
       activeFeed: true,
     };
@@ -102,7 +89,7 @@ export class ArtworkExcerptsController {
     };
   }
 
-  private prepareExcerpt(excerpt: ArtworkExcerpt): ExcerptView {
+  private prepareExcerpt(excerpt: ArtworkExcerpt) {
     return {
       ...excerpt,
       imageUrl: `${this.minioPublicUrl}/${excerpt.imageObjectKey}`,

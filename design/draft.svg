@@ -17,7 +17,7 @@
     <g id="header">
       <rect width="390" height="94" fill="#FFFFFF"/>
       <text x="20" y="30" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">КУЛЬТУРНЫЙ СЛЕД</text>
-      <text x="20" y="64" fill="#3C3C3C" font-family="Georgia, serif" font-size="28" font-weight="700">Новый отрывок</text>
+      <text x="20" y="64" fill="#3C3C3C" font-family="Georgia, serif" font-size="28" font-weight="700">Добавление отрывка</text>
       <rect x="20" y="86" width="78" height="4" rx="2" fill="#ED2324"/>
     </g>
 
@@ -31,49 +31,35 @@
         <text x="195" y="241" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="11" opacity="0.84">предпросмотр материалов</text>
       </g>
 
-      <g id="status">
-        <rect x="28" y="276" width="92" height="26" rx="13" fill="#ED2324" opacity="0.10"/>
-        <circle cx="42" cy="289" r="4" fill="#ED2324"/>
-        <text x="52" y="293" fill="#ED2324" font-family="Arial, sans-serif" font-size="11" font-weight="700">ЧЕРНОВИК</text>
-        <text x="354" y="293" text-anchor="end" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" opacity="0.62">поля доступны</text>
-      </g>
-
       <g id="title-field">
         <text x="28" y="329" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700">НАЗВАНИЕ ПРОИЗВЕДЕНИЯ</text>
         <rect x="28" y="340" width="334" height="44" rx="8" fill="#FFFFFF" stroke="#3C3C3C" stroke-opacity="0.28"/>
-        <text x="42" y="367" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">Евгений Онегин</text>
+        <text x="42" y="367" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">Фауст</text>
       </g>
 
       <g id="author-field">
         <text x="28" y="411" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700">АВТОР ИЛИ СЦЕНАРИСТ</text>
         <rect x="28" y="422" width="216" height="44" rx="8" fill="#FFFFFF" stroke="#3C3C3C" stroke-opacity="0.28"/>
-        <text x="42" y="449" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">Александр Пушкин</text>
+        <text x="42" y="449" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">Иоганн Вольфганг фон Гёте</text>
       </g>
 
       <g id="year-field">
         <text x="258" y="411" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700">ГОД</text>
         <rect x="258" y="422" width="104" height="44" rx="8" fill="#FFFFFF" stroke="#3C3C3C" stroke-opacity="0.28"/>
-        <text x="272" y="449" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">1833</text>
+        <text x="272" y="449" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="14">1808</text>
       </g>
 
       <g id="excerpt-field">
         <text x="28" y="493" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700">ТЕКСТ ОТРЫВКА</text>
         <rect x="28" y="504" width="334" height="108" rx="8" fill="#FFFFFF" stroke="#3C3C3C" stroke-opacity="0.28"/>
-        <text x="42" y="533" fill="#3C3C3C" font-family="Georgia, serif" font-size="14">«Чем меньше женщину мы любим,</text>
-        <text x="42" y="555" fill="#3C3C3C" font-family="Georgia, serif" font-size="14">тем легче нравимся мы ей...»</text>
+        <text x="42" y="533" fill="#3C3C3C" font-family="Georgia, serif" font-size="14">«Лишь тот достоин жизни и свободы,</text>
+        <text x="42" y="555" fill="#3C3C3C" font-family="Georgia, serif" font-size="14">кто каждый день за них идёт на бой»</text>
       </g>
 
       <g id="object-keys">
         <text x="28" y="642" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11" font-weight="700">МЕДИАФАЙЛЫ В MINIO</text>
         <rect x="28" y="653" width="334" height="34" rx="7" fill="#3C3C3C" opacity="0.06"/>
-        <text x="40" y="674" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11">eugene-onegin.jpg · eugene-onegin.mp4</text>
-      </g>
-
-      <g id="notice">
-        <circle cx="36" cy="715" r="9" fill="#ED2324"/>
-        <text x="36" y="719" text-anchor="middle" fill="#FFFFFF" font-family="Georgia, serif" font-size="12" font-weight="700">i</text>
-        <text x="53" y="712" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11">В первой лабораторной данные</text>
-        <text x="53" y="728" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11">не отправляются и не сохраняются.</text>
+        <text x="40" y="674" fill="#3C3C3C" font-family="Arial, sans-serif" font-size="11">faust.jpg · faust.mp4</text>
       </g>
     </g>
 
