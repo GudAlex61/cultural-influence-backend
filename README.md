@@ -37,3 +37,15 @@ npm run build
 npm test
 npm run test:e2e
 ```
+
+## Материалы для защиты
+
+- `design` — три SVG-макета для импорта в один файл Figma;
+- `documentation/uml/cultural-influence.mdj` — единый проект StarUML;
+- `documentation/technical-specification-module-1.docx` — ТЗ первого модуля;
+- `documentation/control-questions-lab1.docx` — письменные ответы;
+- `documentation/lecture-01-web-mvc.docx` — конспект первой лекции;
+- `documentation/screenshots-lab1.md` — порядок подготовки 19 обязательных кадров;
+- `screenshots/preview` — готовые превью трёх страниц приложения.
+
+Локальный Git-репозиторий находится в ветке `lab1-cultural-influence`. Для отправки на GitHub достаточно создать пустой удалённый репозиторий, добавить его как `origin` и выполнить `git push -u origin lab1-cultural-influence`.

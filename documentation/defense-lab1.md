@@ -18,7 +18,7 @@
 ## Что требуется сделать лично студенту
 
 1. Создать или выбрать удалённый репозиторий GitHub, если он ещё не создан. Не публиковать пароли, `.env` и учётные данные MinIO.
-2. Создать отдельную ветку, например `lab1-cultural-influence`, сделать осмысленный commit и отправить ветку в GitHub.
+2. Локальная ветка `lab1-cultural-influence` и первый осмысленный commit уже созданы. Остаётся отправить эту ветку в GitHub.
 3. Импортировать подготовленные макеты в Figma либо собрать по ним три фрейма и сохранить ссылку на проект.
 4. Открыть `.mdj` в StarUML, проверить расположение элементов и сохранить файл установленной версией программы.
 5. Снять 19 скриншотов на собственной запущенной системе: заранее создать статичный набор кадров невозможно, потому что на них должны быть видны реальные приложение, DevTools, MinIO и исходный код.
@@ -121,10 +121,8 @@ MinIO является объектным хранилищем. В модели 
 4. Выполнить локально команды, подставив адрес своего репозитория:
 
 ```powershell
-git switch -c lab1-cultural-influence
-git add cultural-influence-backend
-git commit -m "Выполнить лабораторную работу 1"
-git remote add origin https://github.com/USER/cultural-influence-web.git
+cd C:\Users\aleks\cultural-influence-backend
+git remote add origin https://github.com/USER/cultural-influence-backend.git
 git push -u origin lab1-cultural-influence
 ```
 
