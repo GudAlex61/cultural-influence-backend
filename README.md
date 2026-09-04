@@ -16,7 +16,7 @@ npm run start:dev
 
 Приложение: `http://localhost:3000/artwork-excerpts`
 
-MinIO: `http://localhost:9001` (логин `root`, пароль `rootpassword`). Бакет `cultural-excerpts` должен быть публичным; файлы из папки `media` загружаются в него через интерфейс MinIO.
+MinIO: `http://localhost:9001` (логин `root`, пароль `rootpassword`). Изображения и видео хранятся в публичном бакете `cultural-excerpts`; в модели указаны только их объектные ключи.
 
 ## Три GET-маршрута
 
