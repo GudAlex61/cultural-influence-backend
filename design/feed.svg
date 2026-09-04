@@ -58,6 +58,8 @@
         <text x="40" y="681" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="13" font-weight="700">Больше  ↓</text>
       </g>
 
+      <text id="swipe-hint" x="187" y="692" text-anchor="middle" fill="#FFFFFF" opacity="0.76" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="0.7">↑ ПРОВЕДИТЕ ВВЕРХ</text>
+
       <g id="next-button">
         <rect x="40" y="702" width="294" height="42" rx="21" fill="#ED2324"/>
         <text x="187" y="728" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="700">Следующий отрывок</text>

@@ -1,21 +1,31 @@
 # Файлы бакета MinIO
 
-В папке находятся восемь оригинальных векторных обложек, созданных специально для учебного приложения «Культурный след». Они не содержат скачанных фотографий, репродукций или чужих иллюстраций. Во всех файлах использована палитра интерфейса: `#ED2324`, `#3C3C3C`, `#FFFFFF`.
+Рабочие изображения для семи карточек взяты из Wikimedia Commons: это исторические обложки, титульные листы и иллюстрации из общественного достояния. Для удалённой записи «Евгений Онегин» используется созданная для проекта SVG-обложка. Старые SVG-файлы остальных карточек сохранены как локальные резервные варианты, но модель на них не ссылается.
 
 Имена файлов полностью совпадают со значениями `imageObjectKey` в массиве приложения:
 
 | Файл | Произведение | Автор | Год в приложении |
 |---|---|---|---:|
-| `crime-and-punishment.svg` | «Преступление и наказание» | Фёдор Достоевский | 1866 |
-| `war-and-peace.svg` | «Война и мир» | Лев Толстой | 1869 |
-| `hamlet.svg` | «Гамлет» | Уильям Шекспир | 1603 |
-| `alice-in-wonderland.svg` | «Алиса в Стране чудес» | Льюис Кэрролл | 1865 |
-| `divine-comedy.svg` | «Божественная комедия» | Данте Алигьери | 1321 |
-| `don-quixote.svg` | «Дон Кихот» | Мигель де Сервантес | 1605 |
-| `faust.svg` | «Фауст» | Иоганн Вольфганг фон Гёте | 1808 |
+| `crime-and-punishment.jpg` | «Преступление и наказание» | Фёдор Достоевский | 1866 |
+| `war-and-peace.jpg` | «Война и мир» | Лев Толстой | 1869 |
+| `hamlet.jpg` | «Гамлет» | Уильям Шекспир | 1603 |
+| `alice-in-wonderland.jpg` | «Алиса в Стране чудес» | Льюис Кэрролл | 1865 |
+| `divine-comedy.jpg` | «Божественная комедия» | Данте Алигьери | 1321 |
+| `don-quixote.jpg` | «Дон Кихот» | Мигель де Сервантес | 1605 |
+| `faust.jpg` | «Фауст» | Иоганн Вольфганг фон Гёте | 1808 |
 | `eugene-onegin.svg` | «Евгений Онегин» | Александр Пушкин | 1833 |
 
-Восемь коротких `.mp4`-заставок также находятся в этой папке под именами из полей `videoObjectKey`. Они созданы специально для учебного приложения и отличаются цветовым оформлением.
+Восемь коротких `.mp4`-заставок находятся в этой папке под именами из полей `videoObjectKey`. Для «Гамлета» используется шестисекундный фрагмент современной постановки с лицензией CC0, для «Алисы» — фрагмент первой экранизации 1903 года из общественного достояния. Для остальных опубликованных карточек сделано плавное движение по соответствующей исторической обложке или иллюстрации. Все рабочие ролики приведены к вертикальному формату и отключены от звуковой дорожки.
+
+## Источники изображений и видео
+
+- «Преступление и наказание»: [обложка первого издания](https://commons.wikimedia.org/wiki/File:Cover_of_the_first_edition_of_Crime_and_Punishment.jpg), Public Domain.
+- «Война и мир»: [обложка русского издания 1912 года](https://commons.wikimedia.org/wiki/File:%D0%A2%D0%BE%D0%BB%D1%81%D1%82%D0%BE%D0%B9_%D0%9B._%D0%9D._%D0%92%D0%BE%D0%B9%D0%BD%D0%B0_%D0%B8_%D0%BC%D0%B8%D1%80,_%D0%A2._1._%D0%9E%D0%B1%D0%BB%D0%BE%D0%B6%D0%BA%D0%B0_%D0%B8%D0%B7%D0%B4.1912%D0%B3,%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F.jpg), Public Domain (PD-Russia-1996).
+- «Гамлет»: [титульный лист второго кварто](https://commons.wikimedia.org/wiki/File:Hamlet.jpg), Public Domain; [вертикальный фрагмент постановки](https://commons.wikimedia.org/wiki/File:De_Bende_van_Richaar_-_Hamlet_-_Aalsters_dialect_-_fragment.webm), CC0.
+- «Алиса в Стране чудес»: [обложка издания 1865 года](https://commons.wikimedia.org/wiki/File:Alice%27s_Adventures_in_Wonderland_cover_(1865).jpg), Public Domain; [экранизация 1903 года](https://commons.wikimedia.org/wiki/File:Alice_In_Wonderland_(1903)_-_Public_Domain_Silent_Fantasy.webm), Public Domain.
+- «Божественная комедия»: [иллюстрация Гюстава Доре](https://commons.wikimedia.org/wiki/File:Divina_Commedia_by_Dore_-_P1.jpg), Public Domain.
+- «Дон Кихот»: [Дон Кихот и ветряные мельницы, Гюстав Доре](https://commons.wikimedia.org/wiki/File:Don_Quijote_Illustration_by_Gustave_Dore_VII.jpg), Public Domain.
+- «Фауст»: [историческое издание произведения Гёте](https://commons.wikimedia.org/wiki/File:Faust-Goethe.jpg), Public Domain.
 
 ## Источники фактических сведений
 
@@ -44,7 +54,7 @@ docker compose up -d
 2. включает публичное скачивание объектов;
 3. копирует содержимое этой папки в корень бакета.
 
-Проверить загрузку можно по адресу `http://localhost:9000/cultural-excerpts/crime-and-punishment.svg`. Консоль MinIO доступна на `http://localhost:9001`; имя пользователя — `root`, пароль — `rootpassword`.
+Проверить загрузку можно по адресу `http://localhost:9000/cultural-excerpts/crime-and-punishment.jpg`. Консоль MinIO доступна на `http://localhost:9001`; имя пользователя — `root`, пароль — `rootpassword`.
 
 ## Ручная загрузка через MinIO Client
 
@@ -55,4 +65,4 @@ mc anonymous set download local/cultural-excerpts
 mc cp --recursive .\media\ local/cultural-excerpts/
 ```
 
-Браузер должен получать SVG с типом содержимого `image/svg+xml`.
+Браузер должен получать рабочие JPG с типом содержимого `image/jpeg`, а MP4 — с типом `video/mp4`.

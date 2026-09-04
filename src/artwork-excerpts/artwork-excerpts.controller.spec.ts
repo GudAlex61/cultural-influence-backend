@@ -16,6 +16,8 @@ describe('ArtworkExcerptsController', () => {
 
     expect(result.excerpt.id).toBe(1);
     expect(result.excerpt.likeCount).toBe(5);
+    expect(result.excerpts).toHaveLength(6);
+    expect(result.excerpts[0].id).toBe(1);
   });
 
   it('opens the next published excerpt', () => {

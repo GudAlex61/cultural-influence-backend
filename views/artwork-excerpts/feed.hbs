@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{title}}</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body class="page page--dark">
   <main class="mobile-layout feed-page">
@@ -13,30 +13,35 @@
       <span class="section-label">ОТРЫВКИ</span>
     </header>
 
-    <article class="feed-card">
-      <video class="feed-card__video" poster="{{excerpt.imageUrl}}" autoplay muted loop playsinline>
-        <source src="{{excerpt.videoUrl}}" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-      </video>
-      <div class="feed-card__shade"></div>
+    <section class="feed-scroll" aria-label="Лента отрывков">
+      {{#each excerpts}}
+        <article class="feed-card" id="excerpt-{{this.id}}">
+          <video class="feed-card__video" poster="{{this.imageUrl}}" autoplay muted loop playsinline preload="metadata">
+            <source src="{{this.videoUrl}}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+          </video>
+          <div class="feed-card__shade"></div>
 
-      <div class="feed-card__content">
-        <img class="feed-card__cover" src="{{excerpt.imageUrl}}" alt="Обложка произведения {{excerpt.workTitle}}">
-        <p class="eyebrow">{{excerpt.workType}} · {{excerpt.publicationYear}}</p>
-        <h1>{{excerpt.workTitle}}</h1>
-        <p class="feed-card__creator">{{excerpt.creatorName}}</p>
+          <div class="feed-card__content">
+            <img class="feed-card__cover" src="{{this.imageUrl}}" alt="Обложка произведения {{this.workTitle}}">
+            <p class="eyebrow">{{this.workType}} · {{this.publicationYear}}</p>
+            <h1>{{this.workTitle}}</h1>
+            <p class="feed-card__creator">{{this.creatorName}}</p>
 
-        <details class="excerpt-details">
-          <summary>Читать отрывок</summary>
-          <p>{{excerpt.excerptText}}</p>
-        </details>
+            <details class="excerpt-details">
+              <summary>Читать отрывок</summary>
+              <p>{{this.excerptText}}</p>
+            </details>
 
-        <div class="feed-card__actions">
-          <span class="like-counter" aria-label="Количество отметок нравится">♥ {{excerpt.likeCount}}</span>
-          <a class="button button--light" href="/artwork-excerpts/feed/{{excerpt.id}}?next=true">Следующий →</a>
-        </div>
-      </div>
-    </article>
+            <div class="feed-card__actions">
+              <span class="like-counter" aria-label="Количество отметок нравится">♥ {{this.likeCount}}</span>
+              <a class="button button--light" href="/artwork-excerpts/feed/{{this.id}}?next=true">Следующий →</a>
+            </div>
+            <p class="swipe-hint" aria-hidden="true">↑ Проведите вверх</p>
+          </div>
+        </article>
+      {{/each}}
+    </section>
   </main>
   {{> bottom_navigation}}
 </body>

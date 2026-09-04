@@ -32,6 +32,8 @@ describe('Artwork excerpts pages (e2e)', () => {
       .expect(200);
 
     expect(response.text).toContain('Война и мир');
+    expect((response.text.match(/class="feed-card"/g) ?? [])).toHaveLength(6);
+    expect(response.text).toContain('Проведите вверх');
   });
 
   it('GET /artwork-excerpts/draft shows the draft form', async () => {

@@ -46,9 +46,15 @@ export class ArtworkExcerptsController {
       excerptIndex = (excerptIndex + 1) % publishedExcerpts.length;
     }
 
+    const orderedExcerpts = [
+      ...publishedExcerpts.slice(excerptIndex),
+      ...publishedExcerpts.slice(0, excerptIndex),
+    ].map((excerpt) => this.prepareExcerpt(excerpt));
+
     return {
       title: 'Лента — Культурный след',
-      excerpt: this.prepareExcerpt(publishedExcerpts[excerptIndex]),
+      excerpt: orderedExcerpts[0],
+      excerpts: orderedExcerpts,
       activeFeed: true,
     };
   }
