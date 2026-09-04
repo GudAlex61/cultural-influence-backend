@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="page page--dark">
+  <main class="mobile-layout feed-page">
+    <header class="compact-header compact-header--overlay">
+      <a class="brand brand--light" href="/artwork-excerpts">КУЛЬТУРНЫЙ СЛЕД</a>
+      <span class="section-label">ОТРЫВКИ</span>
+    </header>
+
+    <article class="feed-card">
+      <video class="feed-card__video" poster="{{excerpt.imageUrl}}" autoplay muted loop playsinline>
+        <source src="{{excerpt.videoUrl}}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+      <div class="feed-card__shade"></div>
+
+      <div class="feed-card__content">
+        <img class="feed-card__cover" src="{{excerpt.imageUrl}}" alt="Обложка произведения {{excerpt.workTitle}}">
+        <p class="eyebrow">{{excerpt.workType}} · {{excerpt.publicationYear}}</p>
+        <h1>{{excerpt.workTitle}}</h1>
+        <p class="feed-card__creator">{{excerpt.creatorName}}</p>
+
+        <details class="excerpt-details">
+          <summary>Читать отрывок</summary>
+          <p>{{excerpt.excerptText}}</p>
+        </details>
+
+        <div class="feed-card__actions">
+          <span class="like-counter" aria-label="Количество отметок нравится">♥ {{excerpt.likeCount}}</span>
+          <a class="button button--light" href="/artwork-excerpts/feed/{{excerpt.id}}?next=true">Следующий →</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  {{> bottom_navigation}}
+</body>
+</html>

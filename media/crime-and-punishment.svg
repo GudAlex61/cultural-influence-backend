@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
+  <title>Преступление и наказание — обложка</title>
+  <rect width="600" height="900" fill="#3C3C3C"/>
+  <circle cx="480" cy="150" r="190" fill="#ED2324" opacity="0.72"/>
+  <path d="M0 630L600 340V900H0Z" fill="#ED2324" opacity="0.28"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="8" opacity="0.82">
+    <path d="M90 180H320M90 220H260M90 260H350"/>
+    <path d="M420 300v230M380 340h80M374 530h92"/>
+  </g>
+  <text x="58" y="600" fill="#FFFFFF" font-family="Georgia, serif" font-size="62" font-weight="700">Преступление</text>
+  <text x="58" y="670" fill="#FFFFFF" font-family="Georgia, serif" font-size="62" font-weight="700">и наказание</text>
+  <rect x="60" y="708" width="96" height="8" fill="#ED2324"/>
+  <text x="60" y="765" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="2">ФЁДОР ДОСТОЕВСКИЙ</text>
+  <text x="60" y="820" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">РОМАН · 1866</text>
+</svg>
