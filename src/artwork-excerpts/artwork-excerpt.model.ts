@@ -17,7 +17,6 @@ export interface ArtworkExcerpt {
   likedByUserIds: number[];
 }
 
-// Единственная коллекция данных лабораторной работы. База данных не используется.
 export const artworkExcerpts: ArtworkExcerpt[] = [
   {
     id: 1,
