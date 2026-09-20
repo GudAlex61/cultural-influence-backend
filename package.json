@@ -1,7 +1,7 @@
 {
   "name": "cultural-influence-backend",
   "version": "1.0.0",
-  "description": "Лабораторная работа №1: сервис отрывков произведений искусства",
+  "description": "Лабораторная работа №1: отрывки произведений искусства для расчёта культурного влияния",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

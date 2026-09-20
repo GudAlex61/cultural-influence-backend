@@ -6,18 +6,22 @@ import {
   Query,
   Render,
 } from '@nestjs/common';
-import { ArtworkExcerpt, artworkExcerpts, ExcerptStatus } from './artwork-excerpt.model';
+import {
+  ArtworkExcerpt,
+  artworkExcerpts,
+  ArtworkExcerptStatus,
+} from './artwork_excerpt.model';
 
-@Controller('artwork-excerpts')
+@Controller('artwork_excerpts')
 export class ArtworkExcerptsController {
-  private readonly minioPublicUrl = 'http://localhost:9000/cultural-excerpts';
+  private readonly minioPublicUrl = 'http://localhost:9000/artwork-excerpts';
 
-  // GET /artwork-excerpts/feed, GET /artwork-excerpts/feed/:id и ?next=true.
+  // GET /artwork_excerpts/feed, GET /artwork_excerpts/feed/:id и ?next=true.
   @Get(['feed', 'feed/:id'])
-  @Render('artwork-excerpts/feed')
+  @Render('artwork_excerpts/feed')
   getFeed(@Param('id') id?: string, @Query('next') next?: string) {
     const publishedExcerpts = artworkExcerpts.filter(
-      (excerpt) => excerpt.status === ExcerptStatus.Published,
+      (excerpt) => excerpt.status === ArtworkExcerptStatus.Published,
     );
 
     let excerptIndex = 0;
@@ -34,24 +38,19 @@ export class ArtworkExcerptsController {
       excerptIndex = (excerptIndex + 1) % publishedExcerpts.length;
     }
 
-    const orderedExcerpts = [
-      ...publishedExcerpts.slice(excerptIndex),
-      ...publishedExcerpts.slice(0, excerptIndex),
-    ].map((excerpt) => this.prepareExcerpt(excerpt));
-
     return {
       title: 'Лента — Культурный след',
-      excerpts: orderedExcerpts,
+      excerpt: this.prepareExcerpt(publishedExcerpts[excerptIndex]),
       activeFeed: true,
     };
   }
 
-  // GET /artwork-excerpts/draft.
+  // GET /artwork_excerpts/draft.
   @Get('draft')
-  @Render('artwork-excerpts/draft')
+  @Render('artwork_excerpts/draft')
   getDraft() {
     const draft = artworkExcerpts.find(
-      (excerpt) => excerpt.status === ExcerptStatus.Draft,
+      (excerpt) => excerpt.status === ArtworkExcerptStatus.Draft,
     );
     if (!draft) {
       throw new NotFoundException('Черновик не найден');
@@ -64,18 +63,18 @@ export class ArtworkExcerptsController {
     };
   }
 
-  // GET /artwork-excerpts?publicationYear=1866.
+  // GET /artwork_excerpts?artworkCreationDate=1865-11-26.
   @Get()
-  @Render('artwork-excerpts/gallery')
-  getGallery(@Query('publicationYear') publicationYear?: string) {
+  @Render('artwork_excerpts/gallery')
+  getGallery(@Query('artworkCreationDate') artworkCreationDate?: string) {
     let publishedExcerpts = artworkExcerpts.filter(
-      (excerpt) => excerpt.status === ExcerptStatus.Published,
+      (excerpt) => excerpt.status === ArtworkExcerptStatus.Published,
     );
 
-    const yearFilter = publicationYear?.trim() ?? '';
-    if (yearFilter !== '') {
+    const creationDateFilter = artworkCreationDate?.trim() ?? '';
+    if (creationDateFilter !== '') {
       publishedExcerpts = publishedExcerpts.filter(
-        (excerpt) => excerpt.publicationYear === Number(yearFilter),
+        (excerpt) => excerpt.artworkCreationDate === creationDateFilter,
       );
     }
 
@@ -84,14 +83,17 @@ export class ArtworkExcerptsController {
       excerpts: publishedExcerpts.map((excerpt) =>
         this.prepareExcerpt(excerpt),
       ),
-      publicationYear: yearFilter,
+      artworkCreationDate: creationDateFilter,
       activeGallery: true,
     };
   }
 
   private prepareExcerpt(excerpt: ArtworkExcerpt) {
+    const [year, month, day] = excerpt.artworkCreationDate.split('-');
+
     return {
       ...excerpt,
+      formattedArtworkCreationDate: `${day}.${month}.${year}`,
       imageUrl: `${this.minioPublicUrl}/${excerpt.imageObjectKey}`,
       videoUrl: `${this.minioPublicUrl}/${excerpt.videoObjectKey}`,
       likeCount: excerpt.likedByUserIds.length,

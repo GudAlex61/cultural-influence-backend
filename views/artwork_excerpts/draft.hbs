@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="page">
+  <main class="mobile-layout content-page">
+    <header class="page-header">
+      <a class="brand" href="/artwork_excerpts">КУЛЬТУРНЫЙ СЛЕД</a>
+      <p class="eyebrow">НОВЫЙ МАТЕРИАЛ</p>
+      <h1>Добавление отрывка</h1>
+    </header>
+
+    <form class="draft-card" action="/artwork_excerpts/draft" method="get">
+      <div class="media-fields">
+        <label class="media-field">
+          <img src="{{excerpt.imageUrl}}" alt="Текущее изображение произведения {{excerpt.artworkTitle}}">
+          <span>Выбрать изображение</span>
+          <input type="file" name="image" accept="image/*">
+        </label>
+
+        <label class="media-field">
+          <video controls muted preload="metadata" poster="{{excerpt.imageUrl}}">
+            <source src="{{excerpt.videoUrl}}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+          </video>
+          <span>Выбрать короткое видео</span>
+          <input type="file" name="video" accept="video/*">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Название произведения</span>
+        <input type="text" name="artworkTitle" value="{{excerpt.artworkTitle}}">
+      </label>
+
+      <label class="field">
+        <span>Краткое описание</span>
+        <textarea name="shortDescription" rows="4">{{excerpt.shortDescription}}</textarea>
+      </label>
+
+      <label class="field">
+        <span>Дата создания произведения</span>
+        <input type="date" name="artworkCreationDate" value="{{excerpt.artworkCreationDate}}">
+      </label>
+
+      <label class="field">
+        <span>Количество цитирований</span>
+        <input type="number" name="citationCount" min="0" value="{{excerpt.citationCount}}">
+      </label>
+
+      <p class="draft-note">В ЛР1 данные можно заполнить, но запись не создаётся и не сохраняется.</p>
+    </form>
+  </main>
+  {{> bottom_navigation}}
+</body>
+</html>

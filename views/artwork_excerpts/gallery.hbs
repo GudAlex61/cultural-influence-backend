@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="page">
+  <main class="mobile-layout content-page">
+    <header class="page-header">
+      <a class="brand" href="/artwork_excerpts">КУЛЬТУРНЫЙ СЛЕД</a>
+      <p class="eyebrow">КОЛЛЕКЦИЯ</p>
+      <h1>Отрывки произведений</h1>
+    </header>
+
+    <form class="filter" action="/artwork_excerpts" method="get">
+      <label class="field" for="artworkCreationDate">
+        <span>Дата создания произведения</span>
+        <input id="artworkCreationDate" type="date" name="artworkCreationDate" value="{{artworkCreationDate}}">
+      </label>
+      <button class="button" type="submit">Найти</button>
+    </form>
+
+    <section class="gallery" aria-label="Опубликованные отрывки">
+      {{#each excerpts}}
+        <a class="gallery-card" href="/artwork_excerpts/feed/{{this.id}}" data-video-url="{{this.videoUrl}}">
+          <img class="gallery-card__image" src="{{this.imageUrl}}" alt="Изображение произведения {{this.artworkTitle}}" loading="lazy">
+          <div class="media-shade"></div>
+          <div class="gallery-card__content">
+            <h2>{{this.artworkTitle}}</h2>
+            <div class="gallery-card__meta">
+              <span>{{this.formattedArtworkCreationDate}}</span>
+              <span>{{this.citationCount}} цит.</span>
+              <span>♥ {{this.likeCount}}</span>
+            </div>
+          </div>
+        </a>
+      {{else}}
+        <p class="empty-state">На выбранную дату опубликованных отрывков нет.</p>
+      {{/each}}
+    </section>
+  </main>
+  {{> bottom_navigation}}
+</body>
+</html>

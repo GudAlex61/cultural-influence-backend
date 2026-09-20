@@ -15,7 +15,6 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
-  console.log(`Приложение запущено: http://localhost:${port}/artwork-excerpts`);
 }
 
 void bootstrap();

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="page page--dark">
+  <main class="mobile-layout feed-page">
+    <header class="compact-header">
+      <a class="brand brand--light" href="/artwork_excerpts">КУЛЬТУРНЫЙ СЛЕД</a>
+      <span class="section-label">ОТРЫВКИ</span>
+    </header>
+
+    <article class="feed-card" id="artwork-excerpt-{{excerpt.id}}">
+      <video class="feed-card__video" poster="{{excerpt.imageUrl}}" autoplay muted loop playsinline preload="metadata">
+        <source src="{{excerpt.videoUrl}}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+      <div class="media-shade"></div>
+
+      <aside class="feed-card__rail" aria-label="Параметры отрывка и действия">
+        <div class="rail-value">
+          <span>Создано</span>
+          <strong>{{excerpt.formattedArtworkCreationDate}}</strong>
+        </div>
+        <div class="rail-value">
+          <span>Цитирований</span>
+          <strong>{{excerpt.citationCount}}</strong>
+        </div>
+        <div class="rail-action" aria-label="Количество отметок нравится">
+          <span class="rail-action__icon">♥</span>
+          <strong>{{excerpt.likeCount}}</strong>
+        </div>
+        <a class="rail-action" href="/artwork_excerpts/feed/{{excerpt.id}}?next=true" aria-label="Открыть следующий отрывок">
+          <span class="rail-action__icon">→</span>
+          <strong>Далее</strong>
+        </a>
+      </aside>
+
+      <div class="feed-card__content">
+        <p class="eyebrow">ОТРЫВОК ПРОИЗВЕДЕНИЯ</p>
+        <h1>{{excerpt.artworkTitle}}</h1>
+        <details class="excerpt-details">
+          <summary>
+            <span class="description-preview">{{excerpt.shortDescription}}</span>
+            <span class="details-more">Ещё</span>
+            <span class="details-less">Меньше</span>
+          </summary>
+          <p>{{excerpt.shortDescription}}</p>
+        </details>
+      </div>
+    </article>
+  </main>
+  {{> bottom_navigation}}
+</body>
+</html>
