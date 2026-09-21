@@ -27,7 +27,12 @@ input,
 textarea { font: inherit; }
 
 .page { background: var(--culture-white); }
-.page--dark { background: var(--culture-gray); }
+.page--dark {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--culture-gray);
+}
 
 .mobile-layout {
   width: min(100%, 390px);
@@ -78,7 +83,8 @@ textarea { font: inherit; }
 .feed-page {
   position: relative;
   height: calc(100vh - 72px);
-  min-height: 620px;
+  height: calc(100dvh - 72px);
+  min-height: 0;
   padding: 8px;
   overflow: hidden;
   background: var(--culture-gray);
@@ -276,11 +282,12 @@ textarea { font: inherit; }
   box-shadow: 0 0 0 2px rgba(237, 35, 36, 0.15);
 }
 
-.draft-note {
-  margin: 6px 0 0;
-  color: rgba(60, 60, 60, 0.75);
-  font-size: 12px;
-  line-height: 1.35;
+.draft-title {
+  margin: 0 0 18px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* Фильтр-календарь */
@@ -308,6 +315,7 @@ textarea { font: inherit; }
 }
 
 .button:hover { background: var(--culture-gray); }
+.button--wide { width: 100%; }
 
 /* Плитка: изображение занимает всю карточку, информация лежит поверх него. */
 .gallery {
@@ -324,6 +332,13 @@ textarea { font: inherit; }
   background: var(--culture-gray);
   color: var(--culture-white);
   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.gallery-card__link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-card:hover {
@@ -356,6 +371,29 @@ textarea { font: inherit; }
   font-size: 10px;
   font-weight: 700;
 }
+
+.gallery-card__delete {
+  position: absolute;
+  z-index: 4;
+  top: 8px;
+  right: 8px;
+}
+
+.gallery-card__delete button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(60, 60, 60, 0.82);
+  color: var(--culture-white);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.gallery-card__delete button:hover { background: var(--culture-red); }
 
 .empty-state {
   grid-column: 1 / -1;

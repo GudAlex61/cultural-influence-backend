@@ -1,102 +1,106 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
   Param,
+  Post,
   Query,
+  Redirect,
   Render,
 } from '@nestjs/common';
-import {
-  ArtworkExcerpt,
-  artworkExcerpts,
-  ArtworkExcerptStatus,
-} from './artwork_excerpt.model';
+import { ArtworkExcerptsService } from './artwork_excerpts.service';
 
 @Controller('artwork_excerpts')
 export class ArtworkExcerptsController {
-  private readonly minioPublicUrl = 'http://localhost:9000/artwork-excerpts';
+  constructor(
+    private readonly artworkExcerptsService: ArtworkExcerptsService,
+  ) {}
 
-  // GET /artwork_excerpts/feed, GET /artwork_excerpts/feed/:id и ?next=true.
   @Get(['feed', 'feed/:id'])
   @Render('artwork_excerpts/feed')
-  getFeed(@Param('id') id?: string, @Query('next') next?: string) {
-    const publishedExcerpts = artworkExcerpts.filter(
-      (excerpt) => excerpt.status === ArtworkExcerptStatus.Published,
-    );
-
-    let excerptIndex = 0;
-    if (id !== undefined) {
-      excerptIndex = publishedExcerpts.findIndex(
-        (excerpt) => excerpt.id === Number(id),
-      );
-      if (excerptIndex === -1) {
-        throw new NotFoundException('Опубликованный отрывок не найден');
-      }
-    }
-
-    if (next === 'true') {
-      excerptIndex = (excerptIndex + 1) % publishedExcerpts.length;
+  async getFeed(@Param('id') id?: string, @Query('next') next?: string) {
+    const requestedId = id === undefined ? undefined : Number(id);
+    if (requestedId !== undefined && !Number.isInteger(requestedId)) {
+      throw new NotFoundException('Отрывок не найден');
     }
 
     return {
       title: 'Лента — Культурный след',
-      excerpt: this.prepareExcerpt(publishedExcerpts[excerptIndex]),
+      excerpt: await this.artworkExcerptsService.getFeedExcerpt(
+        requestedId,
+        next === 'true',
+      ),
       activeFeed: true,
     };
   }
 
-  // GET /artwork_excerpts/draft.
   @Get('draft')
   @Render('artwork_excerpts/draft')
-  getDraft() {
-    const draft = artworkExcerpts.find(
-      (excerpt) => excerpt.status === ArtworkExcerptStatus.Draft,
-    );
-    if (!draft) {
-      throw new NotFoundException('Черновик не найден');
-    }
+  async getDraft() {
+    const excerpt = await this.artworkExcerptsService.getCurrentDraft();
 
     return {
       title: 'Добавление — Культурный след',
-      excerpt: this.prepareExcerpt(draft),
+      excerpt,
+      hasDraft: excerpt !== null,
+      ...this.artworkExcerptsService.getDefaultMedia(),
       activeDraft: true,
     };
   }
 
-  // GET /artwork_excerpts?artworkCreationDate=1865-11-26.
   @Get()
   @Render('artwork_excerpts/gallery')
-  getGallery(@Query('artworkCreationDate') artworkCreationDate?: string) {
-    let publishedExcerpts = artworkExcerpts.filter(
-      (excerpt) => excerpt.status === ArtworkExcerptStatus.Published,
-    );
-
+  async getGallery(
+    @Query('artworkCreationDate') artworkCreationDate?: string,
+  ) {
     const creationDateFilter = artworkCreationDate?.trim() ?? '';
-    if (creationDateFilter !== '') {
-      publishedExcerpts = publishedExcerpts.filter(
-        (excerpt) => excerpt.artworkCreationDate === creationDateFilter,
-      );
-    }
 
     return {
       title: 'Плитка — Культурный след',
-      excerpts: publishedExcerpts.map((excerpt) =>
-        this.prepareExcerpt(excerpt),
+      excerpts: await this.artworkExcerptsService.getPublishedGallery(
+        creationDateFilter || undefined,
       ),
       artworkCreationDate: creationDateFilter,
       activeGallery: true,
     };
   }
 
-  private prepareExcerpt(excerpt: ArtworkExcerpt) {
-    const [year, month, day] = excerpt.artworkCreationDate.split('-');
+  @Post()
+  @Redirect('/artwork_excerpts/draft', 303)
+  async createDraft(@Body('artworkTitle') artworkTitle?: string) {
+    await this.artworkExcerptsService.createDraft(artworkTitle);
+  }
 
-    return {
-      ...excerpt,
-      formattedArtworkCreationDate: `${day}.${month}.${year}`,
-      imageUrl: `${this.minioPublicUrl}/${excerpt.imageObjectKey}`,
-      videoUrl: `${this.minioPublicUrl}/${excerpt.videoObjectKey}`,
-      likeCount: excerpt.likedByUserIds.length,
-    };
+  @Post(':id/publish')
+  @Redirect('/artwork_excerpts', 303)
+  async publishDraft(
+    @Param('id') id: string,
+    @Body('shortDescription') shortDescription?: string,
+    @Body('artworkCreationDate') artworkCreationDate?: string,
+    @Body('citationCount') citationCount?: string,
+  ) {
+    const excerptId = this.parseId(id);
+    const excerpt = await this.artworkExcerptsService.publishDraft(excerptId, {
+      shortDescription,
+      artworkCreationDate,
+      citationCount,
+    });
+
+    return { url: `/artwork_excerpts/feed/${excerpt.id}` };
+  }
+
+  @Post(':id/delete')
+  @Redirect('/artwork_excerpts', 303)
+  async deleteExcerpt(@Param('id') id: string) {
+    await this.artworkExcerptsService.deleteExcerpt(this.parseId(id));
+  }
+
+  private parseId(id: string): number {
+    const parsedId = Number(id);
+    if (!Number.isInteger(parsedId) || parsedId <= 0) {
+      throw new NotFoundException('Отрывок не найден');
+    }
+    return parsedId;
   }
 }

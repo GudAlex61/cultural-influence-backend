@@ -13,5 +13,32 @@ services:
       - minio-data:/data
     command: server /data --console-address ":9001"
 
+  postgres:
+    container_name: cultural_postgres
+    image: postgres:18-alpine
+    ports:
+      - "5455:5432"
+    environment:
+      POSTGRES_USER: cultural_user
+      POSTGRES_PASSWORD: cultural_password
+      POSTGRES_DB: cultural_influence
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cultural_user -d cultural_influence"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    container_name: cultural_adminer
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   minio-data:
+  postgres-data:

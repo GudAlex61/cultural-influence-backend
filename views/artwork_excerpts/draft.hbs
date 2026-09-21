@@ -15,46 +15,68 @@
       <h1>Добавление отрывка</h1>
     </header>
 
-    <form class="draft-card" action="/artwork_excerpts/draft" method="get">
-      <div class="media-fields">
-        <label class="media-field">
-          <img src="{{excerpt.imageUrl}}" alt="Текущее изображение произведения {{excerpt.artworkTitle}}">
-          <span>Выбрать изображение</span>
-          <input type="file" name="image" accept="image/*">
+    {{#if hasDraft}}
+      <form class="draft-card" action="/artwork_excerpts/{{excerpt.id}}/publish" method="post">
+        <div class="media-fields">
+          <div class="media-field">
+            <img src="{{excerpt.displayImageUrl}}" alt="Изображение по умолчанию для {{excerpt.artworkTitle}}">
+            <span>Изображение по умолчанию</span>
+          </div>
+          <div class="media-field">
+            <video controls muted preload="metadata" poster="{{excerpt.displayImageUrl}}">
+              <source src="{{excerpt.displayVideoUrl}}" type="video/mp4">
+              Ваш браузер не поддерживает видео.
+            </video>
+            <span>Видео по умолчанию</span>
+          </div>
+        </div>
+
+        <p class="draft-title">{{excerpt.artworkTitle}}</p>
+
+        <label class="field">
+          <span>Краткое описание</span>
+          <textarea name="shortDescription" rows="4" required>{{excerpt.shortDescription}}</textarea>
         </label>
 
-        <label class="media-field">
-          <video controls muted preload="metadata" poster="{{excerpt.imageUrl}}">
-            <source src="{{excerpt.videoUrl}}" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-          </video>
-          <span>Выбрать короткое видео</span>
-          <input type="file" name="video" accept="video/*">
+        <label class="field">
+          <span>Дата создания произведения</span>
+          <input type="date" name="artworkCreationDate" value="{{excerpt.artworkCreationDate}}" required>
         </label>
-      </div>
 
-      <label class="field">
-        <span>Название произведения</span>
-        <input type="text" name="artworkTitle" value="{{excerpt.artworkTitle}}">
-      </label>
+        <label class="field">
+          <span>Количество цитирований</span>
+          <input type="number" name="citationCount" min="0" value="{{excerpt.citationCount}}" required>
+        </label>
 
-      <label class="field">
-        <span>Краткое описание</span>
-        <textarea name="shortDescription" rows="4">{{excerpt.shortDescription}}</textarea>
-      </label>
+        <button class="button button--wide" type="submit">Опубликовать</button>
+      </form>
+    {{else}}
+      <form class="draft-card" action="/artwork_excerpts" method="post">
+        <div class="media-fields">
+          <label class="media-field">
+            <img src="{{defaultImageUrl}}" alt="Изображение по умолчанию">
+            <span>Выбрать изображение</span>
+            <input type="file" accept="image/*">
+          </label>
 
-      <label class="field">
-        <span>Дата создания произведения</span>
-        <input type="date" name="artworkCreationDate" value="{{excerpt.artworkCreationDate}}">
-      </label>
+          <label class="media-field">
+            <video controls muted preload="metadata" poster="{{defaultImageUrl}}">
+              <source src="{{defaultVideoUrl}}" type="video/mp4">
+              Ваш браузер не поддерживает видео.
+            </video>
+            <span>Выбрать короткое видео</span>
+            <input type="file" accept="video/*">
+          </label>
+        </div>
 
-      <label class="field">
-        <span>Количество цитирований</span>
-        <input type="number" name="citationCount" min="0" value="{{excerpt.citationCount}}">
-      </label>
+        <label class="field">
+          <span>Название произведения</span>
+          <input type="text" name="artworkTitle" maxlength="160" required>
+        </label>
 
-      <p class="draft-note">В ЛР1 данные можно заполнить, но запись не создаётся и не сохраняется.</p>
-    </form>
+        <button class="button button--wide" type="submit">Далее</button>
+      </form>
+    {{/if}}
   </main>
   {{> bottom_navigation}}
 </body>

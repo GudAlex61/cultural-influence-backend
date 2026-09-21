@@ -25,18 +25,23 @@
 
     <section class="gallery" aria-label="Опубликованные отрывки">
       {{#each excerpts}}
-        <a class="gallery-card" href="/artwork_excerpts/feed/{{this.id}}" data-video-url="{{this.videoUrl}}">
-          <img class="gallery-card__image" src="{{this.imageUrl}}" alt="Изображение произведения {{this.artworkTitle}}" loading="lazy">
-          <div class="media-shade"></div>
-          <div class="gallery-card__content">
-            <h2>{{this.artworkTitle}}</h2>
-            <div class="gallery-card__meta">
-              <span>{{this.formattedArtworkCreationDate}}</span>
-              <span>{{this.citationCount}} цит.</span>
-              <span>♥ {{this.likeCount}}</span>
+        <article class="gallery-card" data-video-url="{{this.displayVideoUrl}}">
+          <a class="gallery-card__link" href="/artwork_excerpts/feed/{{this.id}}">
+            <img class="gallery-card__image" src="{{this.displayImageUrl}}" alt="Изображение произведения {{this.artworkTitle}}" loading="lazy">
+            <div class="media-shade"></div>
+            <div class="gallery-card__content">
+              <h2>{{this.artworkTitle}}</h2>
+              <div class="gallery-card__meta">
+                <span>{{this.formattedArtworkCreationDate}}</span>
+                <span>{{this.citationCount}} цит.</span>
+                <span>♥ {{this.likeCount}}</span>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+          <form class="gallery-card__delete" action="/artwork_excerpts/{{this.id}}/delete" method="post">
+            <button type="submit" aria-label="Логически удалить {{this.artworkTitle}}">×</button>
+          </form>
+        </article>
       {{else}}
         <p class="empty-state">На выбранную дату опубликованных отрывков нет.</p>
       {{/each}}
