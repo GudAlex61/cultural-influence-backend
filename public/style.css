@@ -27,11 +27,11 @@ input,
 textarea { font: inherit; }
 
 .page { background: var(--culture-white); }
-.page--dark {
+.page--feed {
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: var(--culture-gray);
+  background: var(--culture-white);
 }
 
 .mobile-layout {
@@ -87,7 +87,7 @@ textarea { font: inherit; }
   min-height: 0;
   padding: 8px;
   overflow: hidden;
-  background: var(--culture-gray);
+  background: var(--culture-white);
 }
 
 .compact-header {
