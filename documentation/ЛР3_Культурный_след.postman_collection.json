@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "Культурный след — ЛР3 — 10 запросов",
+    "description": "Запускать по порядку. В запросе 03 при необходимости заново выбрать два файла из demo-media.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [{
+    "listen": "test",
+    "script": { "type": "text/javascript", "exec": [
+      "const name = pm.info.requestName;",
+      "const expectedCode = name.startsWith('03') || name.startsWith('10') ? 201 : 200;",
+      "pm.test('HTTP код', () => pm.response.to.have.status(expectedCode));",
+      "if (name.startsWith('09')) {",
+      "  pm.test('Пустое тело после удаления', () => pm.expect(pm.response.text()).to.eql(''));",
+      "} else if (name.startsWith('10')) {",
+      "  pm.test('Пароль не возвращается', () => pm.expect(Object.keys(pm.response.json()).sort()).to.eql(['displayName','id','username']));",
+      "} else {",
+      "  const fields = ['artworkCreationDate','artworkTitle','citationCount','createdAt','formationDate','id','imageUrl','isLiked','isOwner','likeCount','shortDescription','videoUrl'];",
+      "  const response = pm.response.json();",
+      "  const items = Array.isArray(response) ? response : [response];",
+      "  pm.test('Одинаковые поля отрывка без status', () => items.forEach(item => pm.expect(Object.keys(item).sort()).to.eql(fields)));",
+      "}"
+    ] }
+  }],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "excerptId", "value": "" },
+    { "key": "nextFromId", "value": "1" },
+    { "key": "demoUsername", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 Список опубликованных отрывков",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts" }
+    },
+    {
+      "name": "02 Фильтр по дате создания произведения",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts?artworkCreationDate=1866-01-01" }
+    },
+    {
+      "name": "03 Создать черновик с фото и видео",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/artwork_excerpts",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "artworkTitle", "value": "Новый отрывок для ЛР3", "type": "text" },
+            { "key": "image", "type": "file", "src": "demo-media/default-artwork.jpg" },
+            { "key": "video", "type": "file", "src": "demo-media/default-artwork.mp4" }
+          ]
+        }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "if (pm.response.code === 201) pm.collectionVariables.set('excerptId', pm.response.json().id);"
+      ] } }]
+    },
+    {
+      "name": "04 Получить черновик",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
+    },
+    {
+      "name": "05 Опубликовать черновик",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/publication",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"shortDescription\":\"Тестовый отрывок для показа ЛР3\",\"artworkCreationDate\":\"1900-01-01\",\"citationCount\":42}" }
+      }
+    },
+    {
+      "name": "06 Лента без ID",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "if (pm.response.code === 200) pm.collectionVariables.set('nextFromId', pm.response.json().id);"
+      ] } }]
+    },
+    {
+      "name": "07 Следующий отрывок ленты",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed/{{nextFromId}}?next=true" }
+    },
+    {
+      "name": "08 Поставить лайк",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/likes",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"liked\":1}" }
+      }
+    },
+    {
+      "name": "09 Логически удалить свой отрывок",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}" }
+    },
+    {
+      "name": "10 Зарегистрировать пользователя",
+      "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+        "pm.collectionVariables.set('demoUsername', 'reader_lab3_' + Date.now());"
+      ] } }],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/users",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"username\":\"{{demoUsername}}\",\"displayName\":\"Читатель ЛР3\",\"password\":\"Lab3Password123!\"}" }
+      }
+    }
+  ]
+}

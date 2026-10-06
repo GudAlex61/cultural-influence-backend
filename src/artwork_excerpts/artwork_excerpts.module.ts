@@ -5,12 +5,13 @@ import { ArtworkExcerptsService } from './artwork_excerpts.service';
 import { ArtworkExcerpt } from './entities/artwork_excerpt.entity';
 import { ArtworkExcerptLike } from './entities/artwork_excerpt_like.entity';
 import { User } from './entities/user.entity';
+import { ArtworkMediaService } from './artwork_media.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ArtworkExcerpt, ArtworkExcerptLike, User]),
   ],
   controllers: [ArtworkExcerptsController],
-  providers: [ArtworkExcerptsService],
+  providers: [ArtworkExcerptsService, ArtworkMediaService],
 })
 export class ArtworkExcerptsModule {}

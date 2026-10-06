@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtworkExcerptsModule } from './artwork_excerpts/artwork_excerpts.module';
+import { UsersModule } from './users/users.module';
+import { SessionsController } from './users/sessions.controller';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ArtworkExcerptsModule } from './artwork_excerpts/artwork_excerpts.modul
       }),
     }),
     ArtworkExcerptsModule,
+    UsersModule,
   ],
+  controllers: [SessionsController],
 })
 export class AppModule {}

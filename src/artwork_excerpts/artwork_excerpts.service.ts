@@ -1,261 +1,208 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { currentUser } from '../shared/current-user';
+import { ArtworkMediaService } from './artwork_media.service';
 import {
-  ArtworkExcerpt,
-  ArtworkExcerptStatus,
-} from './entities/artwork_excerpt.entity';
+  ArtworkExcerptResponseDto,
+  CreateArtworkExcerptDto,
+  PublishArtworkExcerptDto,
+} from './artwork_excerpts.dto';
+import { ArtworkExcerpt, ArtworkExcerptStatus } from './entities/artwork_excerpt.entity';
 import { ArtworkExcerptLike } from './entities/artwork_excerpt_like.entity';
-
-export interface PublishArtworkExcerptInput {
-  shortDescription?: string;
-  artworkCreationDate?: string;
-  citationCount?: string;
-}
-
-export interface PreparedArtworkExcerpt extends ArtworkExcerpt {
-  formattedArtworkCreationDate: string;
-  likeCount: number;
-  displayImageUrl: string;
-  displayVideoUrl: string;
-}
 
 @Injectable()
 export class ArtworkExcerptsService {
-  private readonly currentCreatorId = 1;
-  private readonly defaultImageUrl = '/media/default-artwork.jpg';
-  private readonly defaultVideoUrl = '/media/default-artwork.mp4';
-
   constructor(
     @InjectRepository(ArtworkExcerpt)
-    private readonly artworkExcerptRepository: Repository<ArtworkExcerpt>,
+    private readonly excerptRepository: Repository<ArtworkExcerpt>,
     @InjectRepository(ArtworkExcerptLike)
-    private readonly artworkExcerptLikeRepository: Repository<ArtworkExcerptLike>,
-    private readonly dataSource: DataSource,
+    private readonly likeRepository: Repository<ArtworkExcerptLike>,
+    private readonly media: ArtworkMediaService,
   ) {}
 
-  async getFeedExcerpt(
-    requestedId?: number,
-    next = false,
-  ): Promise<PreparedArtworkExcerpt> {
-    let excerpt: ArtworkExcerpt | null;
+  async getPublished(date?: string): Promise<ArtworkExcerptResponseDto[]> {
+    if (date !== undefined && !this.validDate(date)) {
+      throw new BadRequestException();
+    }
+    const query = this.excerptRepository
+      .createQueryBuilder('excerpt')
+      .where('excerpt.status = :status', { status: ArtworkExcerptStatus.Published })
+      .orderBy('excerpt.id', 'ASC');
+    if (date) {
+      query.andWhere('excerpt.artworkCreationDate = :date', { date });
+    }
+    return Promise.all((await query.getMany()).map((excerpt) => this.toResponse(excerpt)));
+  }
 
-    if (requestedId === undefined) {
-      excerpt = await this.firstPublishedExcerpt();
-    } else if (next) {
-      excerpt = await this.artworkExcerptRepository
+  async getDraft(): Promise<ArtworkExcerptResponseDto> {
+    const draft = await this.excerptRepository.findOneBy({
+      creatorId: currentUser().id,
+      status: ArtworkExcerptStatus.Draft,
+    });
+    if (!draft) {
+      throw new NotFoundException();
+    }
+    return this.toResponse(draft);
+  }
+
+  async getFeed(id?: number, next = false): Promise<ArtworkExcerptResponseDto> {
+    if (id !== undefined && (!Number.isInteger(id) || id <= 0)) {
+      throw new NotFoundException();
+    }
+    if (id !== undefined && next) {
+      await this.publishedById(id);
+    }
+    const query = this.excerptRepository
+      .createQueryBuilder('excerpt')
+      .where('excerpt.status = :status', { status: ArtworkExcerptStatus.Published })
+      .orderBy('excerpt.id', 'ASC')
+      .take(1);
+    if (id !== undefined) {
+      query.andWhere(`excerpt.id ${next ? '>' : '='} :id`, { id });
+    }
+    let excerpt = await query.getOne();
+    if (!excerpt && next) {
+      excerpt = await this.excerptRepository
         .createQueryBuilder('excerpt')
-        .where('excerpt.status = :status', {
-          status: ArtworkExcerptStatus.Published,
-        })
-        .andWhere('excerpt.id > :requestedId', { requestedId })
+        .where('excerpt.status = :status', { status: ArtworkExcerptStatus.Published })
         .orderBy('excerpt.id', 'ASC')
         .take(1)
         .getOne();
-
-      excerpt ??= await this.firstPublishedExcerpt();
-    } else {
-      excerpt = await this.artworkExcerptRepository
-        .createQueryBuilder('excerpt')
-        .where('excerpt.status = :status', {
-          status: ArtworkExcerptStatus.Published,
-        })
-        .andWhere('excerpt.id = :requestedId', { requestedId })
-        .take(1)
-        .getOne();
     }
-
     if (!excerpt) {
-      throw new NotFoundException('Опубликованный отрывок не найден');
+      throw new NotFoundException();
     }
-
-    return this.prepareExcerpt(excerpt);
+    return this.toResponse(excerpt);
   }
 
-  async getCurrentDraft(): Promise<PreparedArtworkExcerpt | null> {
-    const draft = await this.artworkExcerptRepository.findOne({
-      where: {
-        creatorId: this.currentCreatorId,
-        status: ArtworkExcerptStatus.Draft,
-      },
-    });
-
-    return draft ? this.prepareExcerpt(draft) : null;
-  }
-
-  async getPublishedGallery(
-    artworkCreationDate?: string,
-  ): Promise<PreparedArtworkExcerpt[]> {
-    const query = this.artworkExcerptRepository
-      .createQueryBuilder('excerpt')
-      .where('excerpt.status = :status', {
-        status: ArtworkExcerptStatus.Published,
-      })
-      .orderBy('excerpt.id', 'ASC');
-
-    if (artworkCreationDate) {
-      query.andWhere('excerpt.artworkCreationDate = :artworkCreationDate', {
-        artworkCreationDate,
-      });
+  async createDraft(
+    body: CreateArtworkExcerptDto,
+    image: Express.Multer.File,
+    video: Express.Multer.File,
+  ): Promise<ArtworkExcerptResponseDto> {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(image.mimetype) ||
+        image.size > 10 * 1024 * 1024 ||
+        !['video/mp4', 'video/webm'].includes(video.mimetype)) {
+      throw new BadRequestException();
+    }
+    const title = body.artworkTitle.trim();
+    if (!title || await this.excerptRepository.existsBy({
+      creatorId: currentUser().id,
+      status: ArtworkExcerptStatus.Draft,
+    })) {
+      throw new BadRequestException();
     }
 
-    const excerpts = await query.getMany();
-    return Promise.all(excerpts.map((excerpt) => this.prepareExcerpt(excerpt)));
-  }
-
-  async createDraft(artworkTitle?: string): Promise<ArtworkExcerpt> {
-    const title = artworkTitle?.trim();
-    if (!title) {
-      throw new BadRequestException('Укажите название произведения');
-    }
-
-    const existingDraft = await this.artworkExcerptRepository.findOne({
-      where: {
-        creatorId: this.currentCreatorId,
-        status: ArtworkExcerptStatus.Draft,
-      },
-    });
-    if (existingDraft) {
-      return existingDraft;
-    }
-
-    return this.artworkExcerptRepository.save(
-      this.artworkExcerptRepository.create({
+    const uploaded: string[] = [];
+    let saved = false;
+    try {
+      const imageObject = await this.media.upload(image, 'image');
+      uploaded.push(imageObject.key);
+      const videoObject = await this.media.upload(video, 'video');
+      uploaded.push(videoObject.key);
+      const excerpt = await this.excerptRepository.save(this.excerptRepository.create({
         artworkTitle: title,
         shortDescription: null,
         artworkCreationDate: null,
         citationCount: null,
         status: ArtworkExcerptStatus.Draft,
-        imageUrl: this.defaultImageUrl,
-        videoUrl: this.defaultVideoUrl,
-        creatorId: this.currentCreatorId,
+        imageUrl: imageObject.url,
+        videoUrl: videoObject.url,
+        creatorId: currentUser().id,
         formationDate: null,
-      }),
-    );
+      }));
+      saved = true;
+      return this.toResponse(excerpt);
+    } catch (error) {
+      if (!saved) {
+        await Promise.allSettled(uploaded.map((key) => this.media.remove(key)));
+      }
+      throw error;
+    }
   }
 
-  async publishDraft(
-    excerptId: number,
-    input: PublishArtworkExcerptInput,
-  ): Promise<ArtworkExcerpt> {
-    const draft = await this.artworkExcerptRepository.findOne({
-      where: {
-        id: excerptId,
-        creatorId: this.currentCreatorId,
-        status: ArtworkExcerptStatus.Draft,
-      },
+  async publish(id: number, body: PublishArtworkExcerptDto): Promise<ArtworkExcerptResponseDto> {
+    const draft = await this.excerptRepository.findOneBy({
+      id,
+      creatorId: currentUser().id,
+      status: ArtworkExcerptStatus.Draft,
     });
     if (!draft) {
-      throw new NotFoundException('Черновик не найден');
+      throw new NotFoundException();
     }
-
-    const shortDescription = input.shortDescription?.trim();
-    const artworkCreationDate = input.artworkCreationDate?.trim();
-    const citationCount = Number(input.citationCount);
-
-    if (!shortDescription || !artworkCreationDate) {
-      throw new BadRequestException(
-        'Для публикации заполните описание и оба поля по теме',
-      );
+    if (!body.shortDescription.trim() || !this.validDate(body.artworkCreationDate)) {
+      throw new BadRequestException();
     }
-    if (!Number.isInteger(citationCount) || citationCount < 0) {
-      throw new BadRequestException(
-        'Количество цитирований должно быть целым неотрицательным числом',
-      );
-    }
-
-    draft.shortDescription = shortDescription;
-    draft.artworkCreationDate = artworkCreationDate;
-    draft.citationCount = citationCount;
-    draft.status = ArtworkExcerptStatus.Published;
+    draft.shortDescription = body.shortDescription.trim();
+    draft.artworkCreationDate = body.artworkCreationDate;
+    draft.citationCount = body.citationCount;
     draft.formationDate = new Date();
-
-    return this.artworkExcerptRepository.save(draft);
+    draft.status = ArtworkExcerptStatus.Published;
+    return this.toResponse(await this.excerptRepository.save(draft));
   }
 
-  async deleteExcerpt(excerptId: number): Promise<void> {
-    const [rows] = (await this.dataSource.query(
-      `UPDATE artwork_excerpts
-       SET status = $1
-       WHERE id = $2 AND status <> $1
-       RETURNING id`,
-      [ArtworkExcerptStatus.Deleted, excerptId],
-    )) as [{ id: number }[], number];
-
-    if (rows.length === 0) {
-      throw new NotFoundException('Отрывок не найден');
+  async setLike(id: number, liked: 0 | 1): Promise<ArtworkExcerptResponseDto> {
+    const excerpt = await this.publishedById(id);
+    const pair = { userId: currentUser().id, artworkExcerptId: id };
+    if (liked === 1) {
+      await this.likeRepository.upsert(pair, ['userId', 'artworkExcerptId']);
+    } else {
+      await this.likeRepository.delete(pair);
     }
+    return this.toResponse(excerpt);
   }
 
-  getDefaultMedia() {
+  async delete(id: number): Promise<void> {
+    const excerpt = await this.excerptRepository.findOneBy({
+      id,
+      creatorId: currentUser().id,
+      status: ArtworkExcerptStatus.Published,
+    });
+    if (!excerpt) {
+      throw new NotFoundException();
+    }
+    excerpt.status = ArtworkExcerptStatus.Deleted;
+    await this.excerptRepository.save(excerpt);
+  }
+
+  private async publishedById(id: number): Promise<ArtworkExcerpt> {
+    const excerpt = await this.excerptRepository.findOneBy({
+      id,
+      status: ArtworkExcerptStatus.Published,
+    });
+    if (!excerpt) {
+      throw new NotFoundException();
+    }
+    return excerpt;
+  }
+
+  private async toResponse(excerpt: ArtworkExcerpt): Promise<ArtworkExcerptResponseDto> {
+    const [likeCount, ownLike] = await Promise.all([
+      this.likeRepository.countBy({ artworkExcerptId: excerpt.id }),
+      this.likeRepository.existsBy({ artworkExcerptId: excerpt.id, userId: currentUser().id }),
+    ]);
     return {
-      defaultImageUrl: this.defaultImageUrl,
-      defaultVideoUrl: this.defaultVideoUrl,
+      id: excerpt.id,
+      artworkTitle: excerpt.artworkTitle,
+      shortDescription: excerpt.shortDescription,
+      imageUrl: excerpt.imageUrl,
+      videoUrl: excerpt.videoUrl,
+      artworkCreationDate: excerpt.artworkCreationDate,
+      citationCount: excerpt.citationCount,
+      createdAt: excerpt.createdAt,
+      formationDate: excerpt.formationDate,
+      likeCount,
+      isOwner: excerpt.creatorId === currentUser().id ? 1 : 0,
+      isLiked: ownLike ? 1 : 0,
     };
   }
 
-  private firstPublishedExcerpt(): Promise<ArtworkExcerpt | null> {
-    return this.artworkExcerptRepository
-      .createQueryBuilder('excerpt')
-      .where('excerpt.status = :status', {
-        status: ArtworkExcerptStatus.Published,
-      })
-      .orderBy('excerpt.id', 'ASC')
-      .take(1)
-      .getOne();
-  }
-
-  private async prepareExcerpt(
-    excerpt: ArtworkExcerpt,
-  ): Promise<PreparedArtworkExcerpt> {
-    const likeCount = await this.artworkExcerptLikeRepository.countBy({
-      artworkExcerptId: excerpt.id,
-    });
-    const formattedArtworkCreationDate = excerpt.artworkCreationDate
-      ? this.formatDate(excerpt.artworkCreationDate)
-      : 'Не указана';
-
-    const [displayImageUrl, displayVideoUrl] = await Promise.all([
-      this.availableMediaUrl(excerpt.imageUrl, this.defaultImageUrl),
-      this.availableMediaUrl(excerpt.videoUrl, this.defaultVideoUrl),
-    ]);
-
-    return Object.assign(excerpt, {
-      formattedArtworkCreationDate,
-      likeCount,
-      displayImageUrl,
-      displayVideoUrl,
-    });
-  }
-
-  private formatDate(date: string): string {
-    const [year, month, day] = date.split('-');
-    return `${day}.${month}.${year}`;
-  }
-
-  private async availableMediaUrl(
-    mediaUrl: string,
-    fallbackUrl: string,
-  ): Promise<string> {
-    if (!mediaUrl) {
-      return fallbackUrl;
+  private validDate(value: string): boolean {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return false;
     }
-    if (mediaUrl.startsWith('/')) {
-      return mediaUrl;
-    }
-
-    try {
-      const response = await fetch(mediaUrl, {
-        method: 'HEAD',
-        signal: AbortSignal.timeout(1500),
-      });
-      return response.ok ? mediaUrl : fallbackUrl;
-    } catch {
-      return fallbackUrl;
-    }
+    const date = new Date(`${value}T00:00:00.000Z`);
+    return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
   }
 }

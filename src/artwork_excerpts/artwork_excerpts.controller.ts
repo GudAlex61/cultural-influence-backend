@@ -1,106 +1,101 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
-  NotFoundException,
+  HttpCode,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
   Query,
-  Redirect,
-  Render,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import {
+  ArtworkExcerptResponseDto,
+  CreateArtworkExcerptDto,
+  PublishArtworkExcerptDto,
+  SetArtworkExcerptLikeDto,
+} from './artwork_excerpts.dto';
 import { ArtworkExcerptsService } from './artwork_excerpts.service';
+
+interface ArtworkFiles {
+  image?: Express.Multer.File[];
+  video?: Express.Multer.File[];
+}
 
 @Controller('artwork_excerpts')
 export class ArtworkExcerptsController {
-  constructor(
-    private readonly artworkExcerptsService: ArtworkExcerptsService,
-  ) {}
+  constructor(private readonly excerpts: ArtworkExcerptsService) {}
 
-  @Get(['feed', 'feed/:id'])
-  @Render('artwork_excerpts/feed')
-  async getFeed(@Param('id') id?: string, @Query('next') next?: string) {
-    const requestedId = id === undefined ? undefined : Number(id);
-    if (requestedId !== undefined && !Number.isInteger(requestedId)) {
-      throw new NotFoundException('Отрывок не найден');
-    }
-
-    return {
-      title: 'Лента — Культурный след',
-      excerpt: await this.artworkExcerptsService.getFeedExcerpt(
-        requestedId,
-        next === 'true',
-      ),
-      activeFeed: true,
-    };
+  @Get()
+  getPublished(@Query('artworkCreationDate') date?: string): Promise<ArtworkExcerptResponseDto[]> {
+    return this.excerpts.getPublished(date);
   }
 
   @Get('draft')
-  @Render('artwork_excerpts/draft')
-  async getDraft() {
-    const excerpt = await this.artworkExcerptsService.getCurrentDraft();
-
-    return {
-      title: 'Добавление — Культурный след',
-      excerpt,
-      hasDraft: excerpt !== null,
-      ...this.artworkExcerptsService.getDefaultMedia(),
-      activeDraft: true,
-    };
+  getDraft(): Promise<ArtworkExcerptResponseDto> {
+    return this.excerpts.getDraft();
   }
 
-  @Get()
-  @Render('artwork_excerpts/gallery')
-  async getGallery(
-    @Query('artworkCreationDate') artworkCreationDate?: string,
-  ) {
-    const creationDateFilter = artworkCreationDate?.trim() ?? '';
+  @Get('feed')
+  getFirstFeed(): Promise<ArtworkExcerptResponseDto> {
+    return this.excerpts.getFeed();
+  }
 
-    return {
-      title: 'Плитка — Культурный след',
-      excerpts: await this.artworkExcerptsService.getPublishedGallery(
-        creationDateFilter || undefined,
-      ),
-      artworkCreationDate: creationDateFilter,
-      activeGallery: true,
-    };
+  @Get('feed/:id')
+  getFeed(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('next') next?: string,
+  ): Promise<ArtworkExcerptResponseDto> {
+    if (next !== undefined && next !== 'true') {
+      throw new BadRequestException();
+    }
+    return this.excerpts.getFeed(id, next === 'true');
   }
 
   @Post()
-  @Redirect('/artwork_excerpts/draft', 303)
-  async createDraft(@Body('artworkTitle') artworkTitle?: string) {
-    await this.artworkExcerptsService.createDraft(artworkTitle);
-  }
-
-  @Post(':id/publish')
-  @Redirect('/artwork_excerpts', 303)
-  async publishDraft(
-    @Param('id') id: string,
-    @Body('shortDescription') shortDescription?: string,
-    @Body('artworkCreationDate') artworkCreationDate?: string,
-    @Body('citationCount') citationCount?: string,
-  ) {
-    const excerptId = this.parseId(id);
-    const excerpt = await this.artworkExcerptsService.publishDraft(excerptId, {
-      shortDescription,
-      artworkCreationDate,
-      citationCount,
-    });
-
-    return { url: `/artwork_excerpts/feed/${excerpt.id}` };
-  }
-
-  @Post(':id/delete')
-  @Redirect('/artwork_excerpts', 303)
-  async deleteExcerpt(@Param('id') id: string) {
-    await this.artworkExcerptsService.deleteExcerpt(this.parseId(id));
-  }
-
-  private parseId(id: string): number {
-    const parsedId = Number(id);
-    if (!Number.isInteger(parsedId) || parsedId <= 0) {
-      throw new NotFoundException('Отрывок не найден');
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }],
+      { storage: memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } },
+    ),
+  )
+  createDraft(
+    @Body() body: CreateArtworkExcerptDto,
+    @UploadedFiles() files: ArtworkFiles,
+  ): Promise<ArtworkExcerptResponseDto> {
+    const image = files?.image?.[0];
+    const video = files?.video?.[0];
+    if (!image || !video) {
+      throw new BadRequestException();
     }
-    return parsedId;
+    return this.excerpts.createDraft(body, image, video);
+  }
+
+  @Put(':id/publication')
+  publish(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: PublishArtworkExcerptDto,
+  ): Promise<ArtworkExcerptResponseDto> {
+    return this.excerpts.publish(id, body);
+  }
+
+  @Post(':id/likes')
+  @HttpCode(200)
+  setLike(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: SetArtworkExcerptLikeDto,
+  ): Promise<ArtworkExcerptResponseDto> {
+    return this.excerpts.setLike(id, body.liked);
+  }
+
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.excerpts.delete(id);
   }
 }
