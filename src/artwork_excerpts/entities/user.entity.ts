@@ -13,6 +13,9 @@ export class User {
   @Column({ name: 'display_name', type: 'varchar', length: 100 })
   displayName!: string;
 
+  @Column({ name: 'password_hash', type: 'varchar', length: 255 })
+  passwordHash!: string;
+
   @OneToMany(() => ArtworkExcerpt, (excerpt) => excerpt.creator)
   artworkExcerpts!: ArtworkExcerpt[];
 

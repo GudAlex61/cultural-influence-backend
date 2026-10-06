@@ -1,0 +1,1020 @@
+{
+	"_type": "Project",
+	"_id": "CI_ER_PROJECT_001",
+	"name": "Культурный след — ER-диаграмма ЛР2",
+	"ownedElements": [
+		{
+			"_type": "ERDDataModel",
+			"_id": "CI_ER_MODEL_001",
+			"_parent": {
+				"$ref": "CI_ER_PROJECT_001"
+			},
+			"name": "Культурный след — ЛР2",
+			"ownedElements": [
+				{
+					"_type": "ERDDiagram",
+					"_id": "CI_ER_DIAGRAM_001",
+					"_parent": {
+						"$ref": "CI_ER_MODEL_001"
+					},
+					"name": "ER-диаграмма — Культурный след",
+					"defaultDiagram": true,
+					"ownedViews": [
+						{
+							"_type": "ERDEntityView",
+							"_id": "CI_ER_VIEW_USERS",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "CI_ER_VIEW_USERS_LABEL",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_USERS"
+									},
+									"font": "Arial;12;1",
+									"left": 40,
+									"top": 45,
+									"width": 280,
+									"height": 13,
+									"text": "users"
+								},
+								{
+									"_type": "ERDColumnCompartmentView",
+									"_id": "CI_ER_VIEW_USERS_COMPARTMENT",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_USERS"
+									},
+									"model": {
+										"$ref": "CI_ER_ENTITY_USERS"
+									},
+									"subViews": [
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_USERS_COL_1",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_USERS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_USERS_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 45,
+											"top": 68,
+											"width": 270,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_USERS_COL_2",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_USERS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_USERS_USERNAME"
+											},
+											"font": "Arial;12;0",
+											"left": 45,
+											"top": 83,
+											"width": 270,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_USERS_COL_3",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_USERS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_USERS_DISPLAY_NAME"
+											},
+											"font": "Arial;12;0",
+											"left": 45,
+											"top": 98,
+											"width": 270,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_USERS_COL_4",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_USERS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_USERS_PASSWORD_HASH"
+											},
+											"font": "Arial;12;0",
+											"left": 45,
+											"top": 113,
+											"width": 270,
+											"height": 13
+										}
+									],
+									"font": "Arial;12;0",
+									"left": 40,
+									"top": 63,
+									"width": 280,
+									"height": 68
+								}
+							],
+							"font": "Arial;12;0",
+							"showShadow": false,
+							"left": 40,
+							"top": 40,
+							"width": 280,
+							"height": 91,
+							"nameLabel": {
+								"$ref": "CI_ER_VIEW_USERS_LABEL"
+							},
+							"columnCompartment": {
+								"$ref": "CI_ER_VIEW_USERS_COMPARTMENT"
+							}
+						},
+						{
+							"_type": "ERDEntityView",
+							"_id": "CI_ER_VIEW_ARTWORKS",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "CI_ER_VIEW_ARTWORKS_LABEL",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_ARTWORKS"
+									},
+									"font": "Arial;12;1",
+									"left": 340,
+									"top": 45,
+									"width": 430,
+									"height": 13,
+									"text": "artwork_excerpts"
+								},
+								{
+									"_type": "ERDColumnCompartmentView",
+									"_id": "CI_ER_VIEW_ARTWORKS_COMPARTMENT",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_ARTWORKS"
+									},
+									"model": {
+										"$ref": "CI_ER_ENTITY_ARTWORKS"
+									},
+									"subViews": [
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_1",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 68,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_2",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_ARTWORK_TITLE"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 83,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_3",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_SHORT_DESCRIPTION"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 98,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_4",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_STATUS"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 113,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_5",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_IMAGE_URL"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 128,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_6",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_VIDEO_URL"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 143,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_7",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_ARTWORK_CREATION_DATE"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 158,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_8",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_CITATION_COUNT"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 173,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_9",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_CREATED_AT"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 188,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_10",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_FORMATION_DATE"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 203,
+											"width": 420,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_ARTWORKS_COL_11",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_ARTWORKS_CREATOR_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 345,
+											"top": 218,
+											"width": 420,
+											"height": 13
+										}
+									],
+									"font": "Arial;12;0",
+									"left": 340,
+									"top": 63,
+									"width": 430,
+									"height": 173
+								}
+							],
+							"font": "Arial;12;0",
+							"showShadow": false,
+							"left": 340,
+							"top": 40,
+							"width": 430,
+							"height": 196,
+							"nameLabel": {
+								"$ref": "CI_ER_VIEW_ARTWORKS_LABEL"
+							},
+							"columnCompartment": {
+								"$ref": "CI_ER_VIEW_ARTWORKS_COMPARTMENT"
+							}
+						},
+						{
+							"_type": "ERDEntityView",
+							"_id": "CI_ER_VIEW_LIKES",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_ENTITY_LIKES"
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "CI_ER_VIEW_LIKES_LABEL",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_LIKES"
+									},
+									"font": "Arial;12;1",
+									"left": 160,
+									"top": 305,
+									"width": 370,
+									"height": 13,
+									"text": "artwork_excerpt_likes"
+								},
+								{
+									"_type": "ERDColumnCompartmentView",
+									"_id": "CI_ER_VIEW_LIKES_COMPARTMENT",
+									"_parent": {
+										"$ref": "CI_ER_VIEW_LIKES"
+									},
+									"model": {
+										"$ref": "CI_ER_ENTITY_LIKES"
+									},
+									"subViews": [
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_LIKES_COL_1",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_LIKES_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_LIKES_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 165,
+											"top": 328,
+											"width": 360,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_LIKES_COL_2",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_LIKES_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_LIKES_USER_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 165,
+											"top": 343,
+											"width": 360,
+											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "CI_ER_VIEW_LIKES_COL_3",
+											"_parent": {
+												"$ref": "CI_ER_VIEW_LIKES_COMPARTMENT"
+											},
+											"model": {
+												"$ref": "CI_ER_COL_LIKES_ARTWORK_EXCERPT_ID"
+											},
+											"font": "Arial;12;0",
+											"left": 165,
+											"top": 358,
+											"width": 360,
+											"height": 13
+										}
+									],
+									"font": "Arial;12;0",
+									"left": 160,
+									"top": 323,
+									"width": 370,
+									"height": 53
+								}
+							],
+							"font": "Arial;12;0",
+							"showShadow": false,
+							"left": 160,
+							"top": 300,
+							"width": 370,
+							"height": 76,
+							"nameLabel": {
+								"$ref": "CI_ER_VIEW_LIKES_LABEL"
+							},
+							"columnCompartment": {
+								"$ref": "CI_ER_VIEW_LIKES_COMPARTMENT"
+							}
+						},
+						{
+							"_type": "ERDRelationshipView",
+							"_id": "CI_ER_RELVIEW_USERS_ARTWORKS",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_REL_USERS_ARTWORKS"
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_ARTWORKS_NAME",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									},
+									"edgePosition": 1
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_ARTWORKS_TAIL",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									},
+									"edgePosition": 2
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_ARTWORKS_HEAD",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": -0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS"
+									}
+								}
+							],
+							"font": "Arial;12;0",
+							"head": {
+								"$ref": "CI_ER_VIEW_ARTWORKS"
+							},
+							"tail": {
+								"$ref": "CI_ER_VIEW_USERS"
+							},
+							"lineStyle": 2,
+							"points": "320:105;340:105",
+							"nameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS_NAME"
+							},
+							"tailNameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS_TAIL"
+							},
+							"headNameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_ARTWORKS_HEAD"
+							}
+						},
+						{
+							"_type": "ERDRelationshipView",
+							"_id": "CI_ER_RELVIEW_USERS_LIKES",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_REL_USERS_LIKES"
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_LIKES_NAME",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									},
+									"edgePosition": 1
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_LIKES_TAIL",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									},
+									"edgePosition": 2
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_USERS_LIKES_HEAD",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": -0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_USERS_LIKES"
+									}
+								}
+							],
+							"font": "Arial;12;0",
+							"head": {
+								"$ref": "CI_ER_VIEW_LIKES"
+							},
+							"tail": {
+								"$ref": "CI_ER_VIEW_USERS"
+							},
+							"lineStyle": 2,
+							"points": "180:131;180:300",
+							"nameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_LIKES_NAME"
+							},
+							"tailNameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_LIKES_TAIL"
+							},
+							"headNameLabel": {
+								"$ref": "CI_ER_RELVIEW_USERS_LIKES_HEAD"
+							}
+						},
+						{
+							"_type": "ERDRelationshipView",
+							"_id": "CI_ER_RELVIEW_ARTWORKS_LIKES",
+							"_parent": {
+								"$ref": "CI_ER_DIAGRAM_001"
+							},
+							"model": {
+								"$ref": "CI_ER_REL_ARTWORKS_LIKES"
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_ARTWORKS_LIKES_NAME",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									},
+									"edgePosition": 1
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_ARTWORKS_LIKES_TAIL",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": 0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									},
+									"edgePosition": 2
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "CI_ER_RELVIEW_ARTWORKS_LIKES_HEAD",
+									"_parent": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									},
+									"visible": false,
+									"font": "Arial;12;0",
+									"left": 0,
+									"top": 0,
+									"height": 13,
+									"alpha": -0.5235987755982988,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES"
+									}
+								}
+							],
+							"font": "Arial;12;0",
+							"head": {
+								"$ref": "CI_ER_VIEW_LIKES"
+							},
+							"tail": {
+								"$ref": "CI_ER_VIEW_ARTWORKS"
+							},
+							"lineStyle": 2,
+							"points": "555:236;555:338;530:338",
+							"nameLabel": {
+								"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES_NAME"
+							},
+							"tailNameLabel": {
+								"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES_TAIL"
+							},
+							"headNameLabel": {
+								"$ref": "CI_ER_RELVIEW_ARTWORKS_LIKES_HEAD"
+							}
+						}
+					]
+				},
+				{
+					"_type": "ERDEntity",
+					"_id": "CI_ER_ENTITY_USERS",
+					"_parent": {
+						"$ref": "CI_ER_MODEL_001"
+					},
+					"name": "users",
+					"columns": [
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_USERS_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"name": "id",
+							"type": "SERIAL",
+							"primaryKey": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_USERS_USERNAME",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"name": "username",
+							"type": "VARCHAR",
+							"length": "64",
+							"unique": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_USERS_DISPLAY_NAME",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"name": "display_name",
+							"type": "VARCHAR",
+							"length": "100"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_USERS_PASSWORD_HASH",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"name": "password_hash",
+							"type": "VARCHAR",
+							"length": "255"
+						}
+					],
+					"ownedElements": [
+						{
+							"_type": "ERDRelationship",
+							"_id": "CI_ER_REL_USERS_ARTWORKS",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"end1": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_USERS_ARTWORKS_END1",
+								"_parent": {
+									"$ref": "CI_ER_REL_USERS_ARTWORKS"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_USERS"
+								},
+								"cardinality": "1"
+							},
+							"end2": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_USERS_ARTWORKS_END2",
+								"_parent": {
+									"$ref": "CI_ER_REL_USERS_ARTWORKS"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_ARTWORKS"
+								},
+								"cardinality": "0..*"
+							}
+						},
+						{
+							"_type": "ERDRelationship",
+							"_id": "CI_ER_REL_USERS_LIKES",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_USERS"
+							},
+							"end1": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_USERS_LIKES_END1",
+								"_parent": {
+									"$ref": "CI_ER_REL_USERS_LIKES"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_USERS"
+								},
+								"cardinality": "1"
+							},
+							"end2": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_USERS_LIKES_END2",
+								"_parent": {
+									"$ref": "CI_ER_REL_USERS_LIKES"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_LIKES"
+								},
+								"cardinality": "0..*"
+							}
+						}
+					]
+				},
+				{
+					"_type": "ERDEntity",
+					"_id": "CI_ER_ENTITY_ARTWORKS",
+					"_parent": {
+						"$ref": "CI_ER_MODEL_001"
+					},
+					"name": "artwork_excerpts",
+					"columns": [
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "id",
+							"type": "SERIAL",
+							"primaryKey": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_ARTWORK_TITLE",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "artwork_title",
+							"type": "VARCHAR",
+							"length": "160"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_SHORT_DESCRIPTION",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "short_description",
+							"type": "VARCHAR",
+							"length": "500",
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_STATUS",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "status",
+							"type": "artwork_excerpts_status_enum"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_IMAGE_URL",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "image_url",
+							"type": "VARCHAR",
+							"length": "500"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_VIDEO_URL",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "video_url",
+							"type": "VARCHAR",
+							"length": "500"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_ARTWORK_CREATION_DATE",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "artwork_creation_date",
+							"type": "DATE",
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_CITATION_COUNT",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "citation_count",
+							"type": "INTEGER",
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_CREATED_AT",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "created_at",
+							"type": "TIMESTAMPTZ"
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_FORMATION_DATE",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "formation_date",
+							"type": "TIMESTAMPTZ",
+							"nullable": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_ARTWORKS_CREATOR_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"name": "creator_id",
+							"type": "INTEGER",
+							"foreignKey": true,
+							"referenceTo": {
+								"$ref": "CI_ER_COL_USERS_ID"
+							}
+						}
+					],
+					"ownedElements": [
+						{
+							"_type": "ERDRelationship",
+							"_id": "CI_ER_REL_ARTWORKS_LIKES",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_ARTWORKS"
+							},
+							"end1": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_ARTWORKS_LIKES_END1",
+								"_parent": {
+									"$ref": "CI_ER_REL_ARTWORKS_LIKES"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_ARTWORKS"
+								},
+								"cardinality": "1"
+							},
+							"end2": {
+								"_type": "ERDRelationshipEnd",
+								"_id": "CI_ER_REL_ARTWORKS_LIKES_END2",
+								"_parent": {
+									"$ref": "CI_ER_REL_ARTWORKS_LIKES"
+								},
+								"reference": {
+									"$ref": "CI_ER_ENTITY_LIKES"
+								},
+								"cardinality": "0..*"
+							}
+						}
+					]
+				},
+				{
+					"_type": "ERDEntity",
+					"_id": "CI_ER_ENTITY_LIKES",
+					"_parent": {
+						"$ref": "CI_ER_MODEL_001"
+					},
+					"name": "artwork_excerpt_likes",
+					"columns": [
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_LIKES_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_LIKES"
+							},
+							"name": "id",
+							"type": "SERIAL",
+							"primaryKey": true
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_LIKES_USER_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_LIKES"
+							},
+							"name": "user_id",
+							"type": "INTEGER",
+							"foreignKey": true,
+							"referenceTo": {
+								"$ref": "CI_ER_COL_USERS_ID"
+							}
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "CI_ER_COL_LIKES_ARTWORK_EXCERPT_ID",
+							"_parent": {
+								"$ref": "CI_ER_ENTITY_LIKES"
+							},
+							"name": "artwork_excerpt_id",
+							"type": "INTEGER",
+							"foreignKey": true,
+							"referenceTo": {
+								"$ref": "CI_ER_COL_ARTWORKS_ID"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
+

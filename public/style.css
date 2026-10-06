@@ -220,7 +220,7 @@ textarea { font: inherit; }
 
 .media-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-bottom: 18px;
 }
@@ -316,6 +316,12 @@ textarea { font: inherit; }
 
 .button:hover { background: var(--culture-gray); }
 .button--wide { width: 100%; }
+.button--compact {
+  min-height: 34px;
+  border-radius: 17px;
+  padding: 0 13px;
+  font-size: 11px;
+}
 
 /* Плитка: изображение занимает всю карточку, информация лежит поверх него. */
 .gallery {
@@ -379,21 +385,9 @@ textarea { font: inherit; }
   right: 8px;
 }
 
-.gallery-card__delete button {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(60, 60, 60, 0.82);
-  color: var(--culture-white);
-  cursor: pointer;
-  font-size: 22px;
-  line-height: 1;
+.gallery-card__delete .button {
+  box-shadow: 0 3px 10px rgba(60, 60, 60, 0.3);
 }
-
-.gallery-card__delete button:hover { background: var(--culture-red); }
 
 .empty-state {
   grid-column: 1 / -1;
