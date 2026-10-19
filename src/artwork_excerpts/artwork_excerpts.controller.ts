@@ -18,7 +18,7 @@ export class ArtworkExcerptsController {
   ) {}
 
   @Get(['feed', 'feed/:id'])
-  @Render('artwork_excerpts/feed')
+  @Render('artwork_excerpts/artwork_excerpt_feed')
   async getFeed(@Param('id') id?: string, @Query('next') next?: string) {
     const requestedId = id === undefined ? undefined : Number(id);
     if (requestedId !== undefined && !Number.isInteger(requestedId)) {
@@ -36,7 +36,7 @@ export class ArtworkExcerptsController {
   }
 
   @Get('draft')
-  @Render('artwork_excerpts/draft')
+  @Render('artwork_excerpts/artwork_excerpt_draft')
   async getDraft() {
     const excerpt = await this.artworkExcerptsService.getCurrentDraft();
 
@@ -50,7 +50,7 @@ export class ArtworkExcerptsController {
   }
 
   @Get()
-  @Render('artwork_excerpts/gallery')
+  @Render('artwork_excerpts/artwork_excerpt_gallery')
   async getGallery(
     @Query('artworkCreationDate') artworkCreationDate?: string,
   ) {
