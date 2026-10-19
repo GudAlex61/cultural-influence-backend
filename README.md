@@ -1,6 +1,6 @@
-# Культурный след — ЛР-3
+# Культурный след — ЛР 4
 
-REST API на NestJS, TypeORM, PostgreSQL и MinIO для отрывков произведений искусства. Ветка `artwork-excerpts-api` создана от ветки ЛР-2 `database`. Интерфейс ЛР-3 проверяется в Postman; сервер не выдаёт HTML-страницы и не использует шаблоны.
+Бэкенд для отрывков произведений искусства на NestJS, TypeORM, PostgreSQL, MinIO и Redis. Эта ветка `artwork-excerpts-sessions` продолжает ЛР 3 `artwork-excerpts-api`: вместо фиксированного пользователя действуют вход по паролю, сессия в Redis и cookie `sessionId`. HTML-шаблонов и страниц приложения в бэкенде нет.
 
 ## Запуск
 
@@ -11,48 +11,44 @@ npm run migration:run
 npm run start:dev
 ```
 
-Повторный `migration:run` не пересоздаёт таблицы. Базовый адрес API: `http://localhost:3000/api`. Для Postman импортируйте `documentation/ЛР3_Культурный_след.postman_collection.json`; файлы для запроса создания находятся в `demo-media/`. Если Postman после импорта не находит файлы по относительным путям, выберите их вручную в запросе 03.
+При свободном порте 3000 Swagger доступен по адресу <http://localhost:3000/api/docs>, API — по <http://localhost:3000/api>. Если порт занят, задайте `$env:PORT='3002'` перед запуском и замените порт в ссылках. Конфигурация PostgreSQL, MinIO и Redis находится в `.env.example`. Docker volumes сохраняют данные между перезапусками. Миграции не нужно откатывать после показа.
 
-Параметры подключения указаны в `.env.example`: PostgreSQL доступен на `localhost:5455`, MinIO — на `localhost:9000`. Данные PostgreSQL и объекты MinIO хранятся в Docker volumes. Не удаляйте volumes перед показом.
+Для локального HTTP используется `COOKIE_SECURE=false`. При HTTPS установите `COOKIE_SECURE=true`; cookie также имеет `HttpOnly`, `SameSite=Lax`, срок жизни по умолчанию 3600 секунд. В Redis хранится `session:<случайный ID> → ID пользователя` с TTL. Выход удаляет ключ и очищает cookie. Пароль хранится в PostgreSQL только в виде `scrypt`-хеша. Старые демонстрационные пользователи ЛР 2 не имеют настоящего хеша и для входа не подходят: зарегистрируйте нового через `POST /api/users`.
 
-## HTTP-методы
+## Методы
 
-| Метод и адрес | Вход | Результат |
+| Метод и адрес | Доступ | Вход и результат |
 | --- | --- | --- |
-| `GET /api/artwork_excerpts` | необязательный `artworkCreationDate=YYYY-MM-DD` | опубликованные отрывки, `200` |
-| `GET /api/artwork_excerpts/draft` | без ID | черновик фиксированного пользователя, `200` или `404` |
-| `GET /api/artwork_excerpts/feed` | без ID | первый опубликованный отрывок, `200` или `404` |
-| `GET /api/artwork_excerpts/feed/:id?next=true` | ID, необязательный `next=true` | отрывок по ID либо следующий, `200` или `404` |
-| `POST /api/artwork_excerpts` | `multipart/form-data`: `artworkTitle`, `image` (файл), `video` (файл) | новый черновик, `201` |
-| `PUT /api/artwork_excerpts/:id/publication` | JSON: `shortDescription`, `artworkCreationDate`, `citationCount` | опубликованный отрывок, `200` |
-| `POST /api/artwork_excerpts/:id/likes` | JSON: `{"liked":1}` или `{"liked":0}` | обновлённый отрывок, `200` |
-| `DELETE /api/artwork_excerpts/:id` | ID своего опубликованного отрывка | мягкое удаление, `200` без тела |
-| `POST /api/users` | JSON: `username`, `displayName`, `password` | ID, имя входа и отображаемое имя, `201` |
-| `POST /api/sessions` | заглушка ЛР-4 | `200` без тела, сессия пока не создаётся |
-| `POST /api/sessions/logout` | заглушка ЛР-4 | `200` без тела |
+| `POST /api/users` | гость | JSON `username`, `displayName`, `password`; `201`, ID и имена без пароля |
+| `POST /api/sessions` | гость | JSON `username`, `password`; `200`, данные пользователя и `Set-Cookie: sessionId=...`; неверные данные — `401` |
+| `POST /api/sessions/logout` | создатель | `200` без тела, сессия удаляется |
+| `GET /api/artwork_excerpts` | все | необязательный `artworkCreationDate=YYYY-MM-DD`; `200`, только опубликованные отрывки |
+| `GET /api/artwork_excerpts/feed` | все | `200`, первый опубликованный отрывок |
+| `GET /api/artwork_excerpts/feed/:id?next=true` | все | `200`, следующий опубликованный отрывок |
+| `GET /api/artwork_excerpts/draft` | создатель | `200`, свой черновик без ID в URL |
+| `POST /api/artwork_excerpts` | создатель | `multipart/form-data`: `artworkTitle`, файлы `image`, `video`; `201`, черновик |
+| `PUT /api/artwork_excerpts/:id/publication` | создатель | JSON `shortDescription`, `artworkCreationDate`, `citationCount`; `200`, публикация своего черновика |
+| `POST /api/artwork_excerpts/:id/likes` | создатель | JSON `{"liked":1}` или `{"liked":0}`; `200`, лайк или отмена |
+| `DELETE /api/artwork_excerpts/:id` | создатель | `200` без тела, логическое удаление своего опубликованного отрывка |
 
-Некорректный ввод возвращает `400`, недоступная или удалённая запись — `404`; тело ошибки пустое. Создатель в ЛР-3 фиксирован функцией `currentUser()` с ID `1`. Клиенту запрещено задавать ID, статус, создателя и системные даты. Статус отрывка остаётся только в БД: `draft → published → deleted`, обратных переходов нет. Удалять можно лишь свой опубликованный отрывок. Восстанавливать его миграцией не нужно.
+Публичное чтение работает без cookie: `isOwner` и `isLiked` равны `0`. Для методов создателя нужна действующая сессия, без неё ответ `401` с пустым телом. Некорректный ввод даёт `400`, недоступная или удалённая запись — `404`; HTTP-код и текст ошибки не дублируются в JSON. У ответов с отрывком постоянный состав полей: `id`, `artworkTitle`, `shortDescription`, `imageUrl`, `videoUrl`, `artworkCreationDate`, `citationCount`, `createdAt`, `formationDate`, `likeCount`, `isOwner`, `isLiked`. Не заполненные поля равны `null`, признаки — `0` или `1`. Статус записи хранится только в БД.
 
-Во всех ответах с отрывком присутствуют одинаковые поля: `id`, `artworkTitle`, `shortDescription`, `imageUrl`, `videoUrl`, `artworkCreationDate`, `citationCount`, `createdAt`, `formationDate`, `likeCount`, `isOwner`, `isLiked`. Пустые поля представлены `null`; `isOwner` и `isLiked` — `0` или `1`. Статус записи и HTTP-код в JSON не дублируются. `GET` ленты выбирает в БД не более одной записи.
+## Данные
 
-При создании принимаются именно два файла. Сервер создаёт латинские имена объектов, загружает оба файла в бакет MinIO `artwork-excerpts` и сохраняет URL в БД. При неудаче создания строки уже загруженные объекты удаляются. Наименование объекта — последняя часть URL. Поддерживаются JPEG/PNG/WebP до 10 МиБ и MP4/WebM до 50 МиБ.
+- `users`: `id`, уникальный `username`, `display_name`, `password_hash`.
+- `artwork_excerpts`: `id`, `artwork_title`, `short_description`, `status`, обязательные `image_url` и `video_url`, тематические `artwork_creation_date` и `citation_count`, `created_at`, `formation_date`, `creator_id`.
+- `artwork_excerpt_likes`: `id`, `user_id`, `artwork_excerpt_id`, уникальная пара пользователя и отрывка.
 
-## Таблицы
+Схема создаётся миграциями TypeORM (`synchronize: false`). Файлы JPEG/PNG/WebP до 10 МиБ и MP4/WebM до 50 МиБ хранятся в MinIO, в БД остаются URL. Если создание строки не удалось, загруженные объекты удаляются. Каскадное удаление записей не используется.
 
-- `users`: `id` (PK), `username` (уникальное), `display_name`, `password_hash` (обязательное). Новая регистрация сохраняет хеш `scrypt`, открытый пароль не сохраняется. У старых демонстрационных пользователей ЛР-2 остаются тестовые значения поля до появления полноценной авторизации в ЛР-4.
-- `artwork_excerpts`: `id` (PK), `artwork_title`, `short_description` (может быть `NULL` у черновика), `status` (только БД), обязательные `image_url` и `video_url`, тематические `artwork_creation_date` и `citation_count` (могут быть `NULL` у черновика), `created_at`, `formation_date`, `creator_id` (FK). На одного создателя допускается не более одного черновика.
-- `artwork_excerpt_likes`: `id` (PK), `user_id` (FK), `artwork_excerpt_id` (FK); пара пользователя и отрывка уникальна.
+## Показ
 
-Схема создаётся миграциями TypeORM, `synchronize: false`. Каскадное удаление таблиц не используется. Взаимодействие API с БД выполнено через TypeORM. Короткое объяснение архитектуры и контрольных вопросов — в `documentation/ЛР3_контрольные_вопросы.md`. В `documentation/Культурный_след_ЛР3.drawio` находятся редактируемые ER и диаграмма классов.
-
-## Порядок показа
-
-Покажите 10 запросов коллекции Postman в порядке их номеров: список, фильтр, создание с двумя файлами, черновик, публикация, лента без ID, следующий отрывок, лайк, удаление, регистрация. Затем в терминале выполните `SELECT` по трём таблицам, покажите модели и сериализатор, функцию `currentUser()` и этот README. Снимки и документ с пояснениями следует хранить на рабочем столе отдельно от репозитория.
-
-Для трёх `SELECT` используйте команды:
+Импортируйте коллекцию `documentation/ЛР4_Культурный_след.postman_collection.json` в Postman. Сначала зарегистрируйте отдельного демонстрационного пользователя и выполните вход. Затем в Swagger покажите вход и публичный список; в Postman — список без cookie, ошибку публикации гостем, публикацию своего черновика с cookie и выход. Для проверки Redis:
 
 ```powershell
-docker exec cultural_postgres psql -U cultural_user -d cultural_influence -c 'SELECT id, artwork_title, status, image_url, video_url, creator_id FROM artwork_excerpts ORDER BY id DESC LIMIT 8;'
-docker exec cultural_postgres psql -U cultural_user -d cultural_influence -c 'SELECT id, user_id, artwork_excerpt_id FROM artwork_excerpt_likes ORDER BY id DESC LIMIT 8;'
-docker exec cultural_postgres psql -U cultural_user -d cultural_influence -c 'SELECT id, username, display_name, LEFT(password_hash, 7) AS hash_prefix FROM users ORDER BY id DESC LIMIT 8;'
+docker exec cultural_redis redis-cli --scan --pattern 'session:*'
+docker exec cultural_redis redis-cli GET session:<ID_из_cookie>
+docker exec cultural_redis redis-cli TTL session:<ID_из_cookie>
 ```
+
+Редактируемые ER, классы и последовательность находятся в `documentation/Культурный_след_ЛР4.drawio`. В диаграмме последовательности показаны фронтенд и два домена, без БД. Реальные скриншоты и отчёт РИП хранятся отдельно от репозитория на рабочем столе.

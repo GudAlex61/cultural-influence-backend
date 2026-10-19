@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { currentUser } from '../shared/current-user';
 import { ArtworkMediaService } from './artwork_media.service';
 import {
   ArtworkExcerptResponseDto,
@@ -21,7 +20,7 @@ export class ArtworkExcerptsService {
     private readonly media: ArtworkMediaService,
   ) {}
 
-  async getPublished(date?: string): Promise<ArtworkExcerptResponseDto[]> {
+  async getPublished(date?: string, userId?: number | null): Promise<ArtworkExcerptResponseDto[]> {
     if (date !== undefined && !this.validDate(date)) {
       throw new BadRequestException();
     }
@@ -32,21 +31,21 @@ export class ArtworkExcerptsService {
     if (date) {
       query.andWhere('excerpt.artworkCreationDate = :date', { date });
     }
-    return Promise.all((await query.getMany()).map((excerpt) => this.toResponse(excerpt)));
+    return Promise.all((await query.getMany()).map((excerpt) => this.toResponse(excerpt, userId)));
   }
 
-  async getDraft(): Promise<ArtworkExcerptResponseDto> {
+  async getDraft(userId: number): Promise<ArtworkExcerptResponseDto> {
     const draft = await this.excerptRepository.findOneBy({
-      creatorId: currentUser().id,
+      creatorId: userId,
       status: ArtworkExcerptStatus.Draft,
     });
     if (!draft) {
       throw new NotFoundException();
     }
-    return this.toResponse(draft);
+    return this.toResponse(draft, userId);
   }
 
-  async getFeed(id?: number, next = false): Promise<ArtworkExcerptResponseDto> {
+  async getFeed(id?: number, next = false, userId?: number | null): Promise<ArtworkExcerptResponseDto> {
     if (id !== undefined && (!Number.isInteger(id) || id <= 0)) {
       throw new NotFoundException();
     }
@@ -73,13 +72,14 @@ export class ArtworkExcerptsService {
     if (!excerpt) {
       throw new NotFoundException();
     }
-    return this.toResponse(excerpt);
+    return this.toResponse(excerpt, userId);
   }
 
   async createDraft(
     body: CreateArtworkExcerptDto,
     image: Express.Multer.File,
     video: Express.Multer.File,
+    userId: number,
   ): Promise<ArtworkExcerptResponseDto> {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(image.mimetype) ||
         image.size > 10 * 1024 * 1024 ||
@@ -88,7 +88,7 @@ export class ArtworkExcerptsService {
     }
     const title = body.artworkTitle.trim();
     if (!title || await this.excerptRepository.existsBy({
-      creatorId: currentUser().id,
+      creatorId: userId,
       status: ArtworkExcerptStatus.Draft,
     })) {
       throw new BadRequestException();
@@ -109,11 +109,11 @@ export class ArtworkExcerptsService {
         status: ArtworkExcerptStatus.Draft,
         imageUrl: imageObject.url,
         videoUrl: videoObject.url,
-        creatorId: currentUser().id,
+        creatorId: userId,
         formationDate: null,
       }));
       saved = true;
-      return this.toResponse(excerpt);
+      return this.toResponse(excerpt, userId);
     } catch (error) {
       if (!saved) {
         await Promise.allSettled(uploaded.map((key) => this.media.remove(key)));
@@ -122,10 +122,10 @@ export class ArtworkExcerptsService {
     }
   }
 
-  async publish(id: number, body: PublishArtworkExcerptDto): Promise<ArtworkExcerptResponseDto> {
+  async publish(id: number, body: PublishArtworkExcerptDto, userId: number): Promise<ArtworkExcerptResponseDto> {
     const draft = await this.excerptRepository.findOneBy({
       id,
-      creatorId: currentUser().id,
+      creatorId: userId,
       status: ArtworkExcerptStatus.Draft,
     });
     if (!draft) {
@@ -139,24 +139,24 @@ export class ArtworkExcerptsService {
     draft.citationCount = body.citationCount;
     draft.formationDate = new Date();
     draft.status = ArtworkExcerptStatus.Published;
-    return this.toResponse(await this.excerptRepository.save(draft));
+    return this.toResponse(await this.excerptRepository.save(draft), userId);
   }
 
-  async setLike(id: number, liked: 0 | 1): Promise<ArtworkExcerptResponseDto> {
+  async setLike(id: number, liked: 0 | 1, userId: number): Promise<ArtworkExcerptResponseDto> {
     const excerpt = await this.publishedById(id);
-    const pair = { userId: currentUser().id, artworkExcerptId: id };
+    const pair = { userId, artworkExcerptId: id };
     if (liked === 1) {
       await this.likeRepository.upsert(pair, ['userId', 'artworkExcerptId']);
     } else {
       await this.likeRepository.delete(pair);
     }
-    return this.toResponse(excerpt);
+    return this.toResponse(excerpt, userId);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number, userId: number): Promise<void> {
     const excerpt = await this.excerptRepository.findOneBy({
       id,
-      creatorId: currentUser().id,
+      creatorId: userId,
       status: ArtworkExcerptStatus.Published,
     });
     if (!excerpt) {
@@ -177,10 +177,10 @@ export class ArtworkExcerptsService {
     return excerpt;
   }
 
-  private async toResponse(excerpt: ArtworkExcerpt): Promise<ArtworkExcerptResponseDto> {
+  private async toResponse(excerpt: ArtworkExcerpt, userId?: number | null): Promise<ArtworkExcerptResponseDto> {
     const [likeCount, ownLike] = await Promise.all([
       this.likeRepository.countBy({ artworkExcerptId: excerpt.id }),
-      this.likeRepository.existsBy({ artworkExcerptId: excerpt.id, userId: currentUser().id }),
+      userId ? this.likeRepository.existsBy({ artworkExcerptId: excerpt.id, userId }) : Promise.resolve(false),
     ]);
     return {
       id: excerpt.id,
@@ -193,7 +193,7 @@ export class ArtworkExcerptsService {
       createdAt: excerpt.createdAt,
       formationDate: excerpt.formationDate,
       likeCount,
-      isOwner: excerpt.creatorId === currentUser().id ? 1 : 0,
+      isOwner: userId && excerpt.creatorId === userId ? 1 : 0,
       isLiked: ownLike ? 1 : 0,
     };
   }

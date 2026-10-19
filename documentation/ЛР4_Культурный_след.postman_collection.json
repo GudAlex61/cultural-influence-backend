@@ -1,0 +1,91 @@
+{
+  "info": {
+    "name": "Культурный след — ЛР4 — сессии",
+    "description": "Реальные запросы для показа ЛР4. Укажите demoUsername и demoPassword в переменных коллекции. guestUrl использует 127.0.0.1, чтобы не передавать cookie домена localhost.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "guestUrl", "value": "http://127.0.0.1:3000/api" },
+    { "key": "demoUsername", "value": "" },
+    { "key": "demoPassword", "value": "" },
+    { "key": "excerptId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 Зарегистрировать пользователя",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/users",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{demoUsername}}\",\n  \"displayName\": \"Показ ЛР4\",\n  \"password\": \"{{demoPassword}}\"\n}" }
+      }
+    },
+    {
+      "name": "02 Войти и получить cookie",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/sessions",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{demoUsername}}\",\n  \"password\": \"{{demoPassword}}\"\n}" }
+      }
+    },
+    {
+      "name": "03 Список гостю без cookie",
+      "request": { "method": "GET", "url": "{{guestUrl}}/artwork_excerpts" }
+    },
+    {
+      "name": "04 Список вошедшему пользователю",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts" }
+    },
+    {
+      "name": "05 Создать черновик с фото и видео",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/artwork_excerpts",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "artworkTitle", "value": "Демонстрационный отрывок ЛР4", "type": "text" },
+            { "key": "image", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.jpg" },
+            { "key": "video", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.mp4" }
+          ]
+        }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Черновик создан', () => pm.response.to.have.status(201));",
+        "pm.collectionVariables.set('excerptId', pm.response.json().id);"
+      ] } }]
+    },
+    {
+      "name": "06 Получить свой черновик",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
+    },
+    {
+      "name": "07 Публикация гостем запрещена",
+      "request": {
+        "method": "PUT",
+        "url": "{{guestUrl}}/artwork_excerpts/{{excerptId}}/publication",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}" }
+      }
+    },
+    {
+      "name": "08 Опубликовать свой черновик",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/publication",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}" }
+      }
+    },
+    {
+      "name": "09 Выйти и удалить сессию",
+      "request": { "method": "POST", "url": "{{baseUrl}}/sessions/logout" }
+    },
+    {
+      "name": "10 Проверить запрет после выхода",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
+    }
+  ]
+}

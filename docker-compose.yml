@@ -30,6 +30,16 @@ services:
       timeout: 5s
       retries: 10
 
+  redis:
+    container_name: cultural_redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+
 volumes:
   minio-data:
   postgres-data:
+  redis-data:

@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { randomBytes, scrypt } from 'crypto';
+import { randomBytes, scrypt, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { Repository } from 'typeorm';
 import { User } from '../artwork_excerpts/entities/user.entity';
-import { RegisterUserDto, UserResponseDto } from './users.dto';
+import { LoginDto, RegisterUserDto, UserResponseDto } from './users.dto';
 
 const deriveKey = promisify(scrypt);
 
@@ -33,5 +33,18 @@ export class UsersService {
       }
       throw error;
     }
+  }
+
+  async authenticate(input: LoginDto): Promise<User> {
+    const user = await this.users.findOneBy({ username: input.username });
+    if (!user) throw new UnauthorizedException();
+    const [algorithm, salt, digest] = user.passwordHash.split('$');
+    if (algorithm !== 'scrypt' || !salt || !digest || !/^[a-f0-9]{128}$/.test(digest)) {
+      throw new UnauthorizedException();
+    }
+    const candidate = (await deriveKey(input.password, salt, 64)) as Buffer;
+    const expected = Buffer.from(digest, 'hex');
+    if (!timingSafeEqual(candidate, expected)) throw new UnauthorizedException();
+    return user;
   }
 }
