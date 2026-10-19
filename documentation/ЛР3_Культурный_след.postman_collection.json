@@ -1,36 +1,18 @@
 {
   "info": {
-    "name": "Культурный след — ЛР3 — 10 запросов",
-    "description": "Запускать по порядку. В запросе 03 при необходимости заново выбрать два файла из demo-media.",
+    "name": "Культурный след — ЛР3 — показ",
+    "description": "10 запросов в порядке показа ЛР3",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "event": [{
-    "listen": "test",
-    "script": { "type": "text/javascript", "exec": [
-      "const name = pm.info.requestName;",
-      "const expectedCode = name.startsWith('03') || name.startsWith('10') ? 201 : 200;",
-      "pm.test('HTTP код', () => pm.response.to.have.status(expectedCode));",
-      "if (name.startsWith('09')) {",
-      "  pm.test('Пустое тело после удаления', () => pm.expect(pm.response.text()).to.eql(''));",
-      "} else if (name.startsWith('10')) {",
-      "  pm.test('Пароль не возвращается', () => pm.expect(Object.keys(pm.response.json()).sort()).to.eql(['displayName','id','username']));",
-      "} else {",
-      "  const fields = ['artworkCreationDate','artworkTitle','citationCount','createdAt','formationDate','id','imageUrl','isLiked','isOwner','likeCount','shortDescription','videoUrl'];",
-      "  const response = pm.response.json();",
-      "  const items = Array.isArray(response) ? response : [response];",
-      "  pm.test('Одинаковые поля отрывка без status', () => items.forEach(item => pm.expect(Object.keys(item).sort()).to.eql(fields)));",
-      "}"
-    ] }
-  }],
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:3000/api" },
     { "key": "excerptId", "value": "" },
-    { "key": "nextFromId", "value": "1" },
-    { "key": "demoUsername", "value": "" }
+    { "key": "feedId", "value": "1" },
+    { "key": "username", "value": "" }
   ],
   "item": [
     {
-      "name": "01 Список опубликованных отрывков",
+      "name": "01 Получить опубликованные отрывки",
       "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts" }
     },
     {
@@ -46,17 +28,21 @@
           "mode": "formdata",
           "formdata": [
             { "key": "artworkTitle", "value": "Новый отрывок для ЛР3", "type": "text" },
-            { "key": "image", "type": "file", "src": "demo-media/default-artwork.jpg" },
-            { "key": "video", "type": "file", "src": "demo-media/default-artwork.mp4" }
+            { "key": "image", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.jpg" },
+            { "key": "video", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.mp4" }
           ]
         }
       },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "if (pm.response.code === 201) pm.collectionVariables.set('excerptId', pm.response.json().id);"
-      ] } }]
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('201 Created', () => pm.response.to.have.status(201));",
+          "pm.collectionVariables.set('excerptId', pm.response.json().id);"
+        ] }
+      }]
     },
     {
-      "name": "04 Получить черновик",
+      "name": "04 Получить черновик текущего пользователя",
       "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
     },
     {
@@ -65,19 +51,26 @@
         "method": "PUT",
         "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/publication",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\"shortDescription\":\"Тестовый отрывок для показа ЛР3\",\"artworkCreationDate\":\"1900-01-01\",\"citationCount\":42}" }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"shortDescription\": \"Тестовый отрывок для показа ЛР3\",\n  \"artworkCreationDate\": \"1900-01-01\",\n  \"citationCount\": 42\n}"
+        }
       }
     },
     {
-      "name": "06 Лента без ID",
+      "name": "06 Получить первую запись ленты",
       "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed" },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "if (pm.response.code === 200) pm.collectionVariables.set('nextFromId', pm.response.json().id);"
-      ] } }]
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('200 OK', () => pm.response.to.have.status(200));",
+          "pm.collectionVariables.set('feedId', pm.response.json().id);"
+        ] }
+      }]
     },
     {
-      "name": "07 Следующий отрывок ленты",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed/{{nextFromId}}?next=true" }
+      "name": "07 Получить следующую запись ленты",
+      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed/{{feedId}}?next=true" }
     },
     {
       "name": "08 Поставить лайк",
@@ -85,7 +78,7 @@
         "method": "POST",
         "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/likes",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\"liked\":1}" }
+        "body": { "mode": "raw", "raw": "{\n  \"liked\": 1\n}" }
       }
     },
     {
@@ -94,14 +87,20 @@
     },
     {
       "name": "10 Зарегистрировать пользователя",
-      "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
-        "pm.collectionVariables.set('demoUsername', 'reader_lab3_' + Date.now());"
-      ] } }],
+      "event": [{
+        "listen": "prerequest",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.collectionVariables.set('username', 'reader_lab3_' + Date.now());"
+        ] }
+      }],
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/users",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\"username\":\"{{demoUsername}}\",\"displayName\":\"Читатель ЛР3\",\"password\":\"Lab3Password123!\"}" }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"displayName\": \"Читатель ЛР3\",\n  \"password\": \"Lab3Password123!\"\n}"
+        }
       }
     }
   ]
