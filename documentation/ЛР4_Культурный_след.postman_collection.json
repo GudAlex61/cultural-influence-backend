@@ -1,48 +1,41 @@
 {
   "info": {
     "name": "Культурный след — ЛР4 — сессии",
-    "description": "Реальные запросы для показа ЛР4. Укажите demoUsername и demoPassword в переменных коллекции. guestUrl использует 127.0.0.1, чтобы не передавать cookie домена localhost.",
+    "description": "Десять прямых запросов для показа ЛР4 без переменных и query-параметров. Адрес 127.0.0.1 используется для проверки без cookie домена localhost.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3000/api" },
-    { "key": "guestUrl", "value": "http://127.0.0.1:3000/api" },
-    { "key": "demoUsername", "value": "" },
-    { "key": "demoPassword", "value": "" },
-    { "key": "excerptId", "value": "" }
-  ],
   "item": [
     {
       "name": "01 Зарегистрировать пользователя",
       "request": {
         "method": "POST",
-        "url": "{{baseUrl}}/users",
+        "url": "http://localhost:3002/api/users",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{demoUsername}}\",\n  \"displayName\": \"Показ ЛР4\",\n  \"password\": \"{{demoPassword}}\"\n}" }
+        "body": { "mode": "raw", "raw": "{\n  \"username\": \"lab4_postman_20261019\",\n  \"displayName\": \"Показ ЛР4\",\n  \"password\": \"Lab4Demo!2026\"\n}", "options": { "raw": { "language": "json" } } }
       }
     },
     {
       "name": "02 Войти и получить cookie",
       "request": {
         "method": "POST",
-        "url": "{{baseUrl}}/sessions",
+        "url": "http://localhost:3002/api/sessions",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{demoUsername}}\",\n  \"password\": \"{{demoPassword}}\"\n}" }
+        "body": { "mode": "raw", "raw": "{\n  \"username\": \"lab4_postman_20261019\",\n  \"password\": \"Lab4Demo!2026\"\n}", "options": { "raw": { "language": "json" } } }
       }
     },
     {
       "name": "03 Список гостю без cookie",
-      "request": { "method": "GET", "url": "{{guestUrl}}/artwork_excerpts" }
+      "request": { "method": "GET", "url": "http://127.0.0.1:3002/api/artwork_excerpts" }
     },
     {
       "name": "04 Список вошедшему пользователю",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts" }
+      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts" }
     },
     {
       "name": "05 Создать черновик с фото и видео",
       "request": {
         "method": "POST",
-        "url": "{{baseUrl}}/artwork_excerpts",
+        "url": "http://localhost:3002/api/artwork_excerpts",
         "body": {
           "mode": "formdata",
           "formdata": [
@@ -53,39 +46,38 @@
         }
       },
       "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "pm.test('Черновик создан', () => pm.response.to.have.status(201));",
-        "pm.collectionVariables.set('excerptId', pm.response.json().id);"
+        "pm.test('Черновик создан', () => pm.response.to.have.status(201));"
       ] } }]
     },
     {
       "name": "06 Получить свой черновик",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
+      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts/draft" }
     },
     {
       "name": "07 Публикация гостем запрещена",
       "request": {
         "method": "PUT",
-        "url": "{{guestUrl}}/artwork_excerpts/{{excerptId}}/publication",
+        "url": "http://127.0.0.1:3002/api/artwork_excerpts/21/publication",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}" }
+        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}", "options": { "raw": { "language": "json" } } }
       }
     },
     {
       "name": "08 Опубликовать свой черновик",
       "request": {
         "method": "PUT",
-        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/publication",
+        "url": "http://localhost:3002/api/artwork_excerpts/21/publication",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}" }
+        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}", "options": { "raw": { "language": "json" } } }
       }
     },
     {
       "name": "09 Выйти и удалить сессию",
-      "request": { "method": "POST", "url": "{{baseUrl}}/sessions/logout" }
+      "request": { "method": "POST", "url": "http://localhost:3002/api/sessions/logout" }
     },
     {
       "name": "10 Проверить запрет после выхода",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
+      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts/draft" }
     }
   ]
 }
