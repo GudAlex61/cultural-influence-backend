@@ -16,7 +16,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiCookieAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiCookieAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { memoryStorage } from 'multer';
 import { AuthenticatedRequest, SessionGuard } from '../users/session.guard';
@@ -42,6 +42,7 @@ export class ArtworkExcerptsController {
   @Get()
   @ApiOperation({ summary: 'Плитка опубликованных отрывков с фильтром по дате создания произведения' })
   @ApiOkResponse({ type: ArtworkExcerptResponseDto, isArray: true })
+  @ApiQuery({ name: 'artworkCreationDate', required: false })
   async getPublished(@Req() request: Request, @Query('artworkCreationDate') date?: string): Promise<ArtworkExcerptResponseDto[]> {
     return this.excerpts.getPublished(date, await this.sessions.getUserId(request));
   }
@@ -65,6 +66,7 @@ export class ArtworkExcerptsController {
   @Get('feed/:id')
   @ApiOperation({ summary: 'Отрывок ленты по ID или следующий опубликованный' })
   @ApiOkResponse({ type: ArtworkExcerptResponseDto })
+  @ApiQuery({ name: 'next', required: false })
   async getFeed(
     @Req() request: Request,
     @Param('id', ParseIntPipe) id: number,
