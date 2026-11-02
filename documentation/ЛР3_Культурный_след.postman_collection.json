@@ -1,106 +1,252 @@
 {
   "info": {
-    "name": "Культурный след — ЛР3 — показ",
-    "description": "10 запросов в порядке показа ЛР3",
+    "name": "Культурный след — 10 методов API",
+    "description": "10 операций из задания: 7 домена отрывков и 3 домена пользователей. Первый и следующий элемент — варианты операции ленты. Для следующего у запроса 02 вручную замените URL на http://localhost:3002/api/artwork_excerpts/feed/1?next=true. URL буквальные, переменных коллекции нет. Cookie передается явным включенным заголовком; cookie jar отключен. В репозиторном экспорте замените PASTE_SESSION_ID на ID из Swagger.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3000/api" },
-    { "key": "excerptId", "value": "" },
-    { "key": "feedId", "value": "1" },
-    { "key": "username", "value": "" }
-  ],
   "item": [
     {
-      "name": "01 Получить опубликованные отрывки",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts" }
+      "name": "01 Список отрывков с фильтром",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts?artworkCreationDate=1866-01-01",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
     },
     {
-      "name": "02 Фильтр по дате создания произведения",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts?artworkCreationDate=1866-01-01" }
+      "name": "02 Лента отрывков",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts/feed",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
     },
     {
-      "name": "03 Создать черновик с фото и видео",
+      "name": "03 Свой черновик",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts/draft",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "04 Добавить отрывок с файлами",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "POST",
-        "url": "{{baseUrl}}/artwork_excerpts",
+        "url": "http://localhost:3002/api/artwork_excerpts",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
-            { "key": "artworkTitle", "value": "Новый отрывок для ЛР3", "type": "text" },
-            { "key": "image", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.jpg" },
-            { "key": "video", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.mp4" }
+            {
+              "key": "artworkTitle",
+              "value": "Отрывок для показа исправлений",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": "C:/Users/Admin/Desktop/cultural-influence-backend/demo-media/default-artwork.jpg"
+            },
+            {
+              "key": "video",
+              "type": "file",
+              "src": "C:/Users/Admin/Desktop/cultural-influence-backend/demo-media/default-artwork.mp4"
+            }
           ]
         }
+      }
+    },
+    {
+      "name": "05 Опубликовать отрывок",
+      "protocolProfileBehavior": {
+        "disableCookies": true
       },
-      "event": [{
-        "listen": "test",
-        "script": { "type": "text/javascript", "exec": [
-          "pm.test('201 Created', () => pm.response.to.have.status(201));",
-          "pm.collectionVariables.set('excerptId', pm.response.json().id);"
-        ] }
-      }]
-    },
-    {
-      "name": "04 Получить черновик текущего пользователя",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/draft" }
-    },
-    {
-      "name": "05 Опубликовать черновик",
       "request": {
         "method": "PUT",
-        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/publication",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:3002/api/artwork_excerpts/22/publication",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"shortDescription\": \"Тестовый отрывок для показа ЛР3\",\n  \"artworkCreationDate\": \"1900-01-01\",\n  \"citationCount\": 42\n}"
+          "raw": "{\n  \"shortDescription\": \"Краткий отрывок произведения для показа исправлений\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "06 Получить первую запись ленты",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed" },
-      "event": [{
-        "listen": "test",
-        "script": { "type": "text/javascript", "exec": [
-          "pm.test('200 OK', () => pm.response.to.have.status(200));",
-          "pm.collectionVariables.set('feedId', pm.response.json().id);"
-        ] }
-      }]
-    },
-    {
-      "name": "07 Получить следующую запись ленты",
-      "request": { "method": "GET", "url": "{{baseUrl}}/artwork_excerpts/feed/{{feedId}}?next=true" }
-    },
-    {
-      "name": "08 Поставить лайк",
+      "name": "06 Удалить свой отрывок",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
-        "method": "POST",
-        "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}/likes",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"liked\": 1\n}" }
+        "method": "DELETE",
+        "url": "http://localhost:3002/api/artwork_excerpts/22",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
       }
     },
     {
-      "name": "09 Логически удалить свой отрывок",
-      "request": { "method": "DELETE", "url": "{{baseUrl}}/artwork_excerpts/{{excerptId}}" }
-    },
-    {
-      "name": "10 Зарегистрировать пользователя",
-      "event": [{
-        "listen": "prerequest",
-        "script": { "type": "text/javascript", "exec": [
-          "pm.collectionVariables.set('username', 'reader_lab3_' + Date.now());"
-        ] }
-      }],
+      "name": "07 Поставить или отменить лайк",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "POST",
-        "url": "{{baseUrl}}/users",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:3002/api/artwork_excerpts/22/likes",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"{{username}}\",\n  \"displayName\": \"Читатель ЛР3\",\n  \"password\": \"Lab3Password123!\"\n}"
+          "raw": "{\n  \"liked\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
+      }
+    },
+    {
+      "name": "08 Зарегистрировать пользователя",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3002/api/users",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"gudis_corrections_20261102\",\n  \"displayName\": \"Показ исправлений ЛР4\",\n  \"password\": \"Lab4Demo!2026\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "09 Войти в систему",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3002/api/sessions",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"gudis_corrections_20261102\",\n  \"password\": \"Lab4Demo!2026\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "10 Выйти из системы",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3002/api/sessions/logout",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
       }
     }
   ]

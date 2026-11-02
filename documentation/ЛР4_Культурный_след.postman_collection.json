@@ -1,83 +1,253 @@
 {
   "info": {
-    "name": "Культурный след — ЛР4 — сессии",
-    "description": "Десять прямых запросов для показа ЛР4 без переменных и query-параметров. Адрес 127.0.0.1 используется для проверки без cookie домена localhost.",
+    "name": "Культурный след — ЛР4 — явные заголовки",
+    "description": "Явные адреса и заголовок Cookie без переменных. Вместо PASTE_SESSION_ID вставьте ID из Application после входа через Swagger. Cookie jar отключен.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "01 Зарегистрировать пользователя",
+      "name": "01 Регистрация",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "POST",
         "url": "http://localhost:3002/api/users",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"username\": \"lab4_postman_20261019\",\n  \"displayName\": \"Показ ЛР4\",\n  \"password\": \"Lab4Demo!2026\"\n}", "options": { "raw": { "language": "json" } } }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"gudis_corrections_20261102\",\n  \"displayName\": \"Показ исправлений ЛР4\",\n  \"password\": \"Lab4Demo!2026\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
       }
     },
     {
-      "name": "02 Войти и получить cookie",
+      "name": "02 Вход через API",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "POST",
         "url": "http://localhost:3002/api/sessions",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"username\": \"lab4_postman_20261019\",\n  \"password\": \"Lab4Demo!2026\"\n}", "options": { "raw": { "language": "json" } } }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"gudis_corrections_20261102\",\n  \"password\": \"Lab4Demo!2026\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
       }
     },
     {
-      "name": "03 Список гостю без cookie",
-      "request": { "method": "GET", "url": "http://127.0.0.1:3002/api/artwork_excerpts" }
+      "name": "03 Список без cookie",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": true
+          }
+        ]
+      }
     },
     {
-      "name": "04 Список вошедшему пользователю",
-      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts" }
+      "name": "04 Список с cookie",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
     },
     {
-      "name": "05 Создать черновик с фото и видео",
+      "name": "05 Добавление фото и видео",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "POST",
         "url": "http://localhost:3002/api/artwork_excerpts",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
-            { "key": "artworkTitle", "value": "Демонстрационный отрывок ЛР4", "type": "text" },
-            { "key": "image", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.jpg" },
-            { "key": "video", "type": "file", "src": "C:\\Users\\Admin\\Desktop\\cultural-influence-backend\\demo-media\\default-artwork.mp4" }
+            {
+              "key": "artworkTitle",
+              "value": "Отрывок для показа исправлений",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": "C:/Users/Admin/Desktop/cultural-influence-backend/demo-media/default-artwork.jpg"
+            },
+            {
+              "key": "video",
+              "type": "file",
+              "src": "C:/Users/Admin/Desktop/cultural-influence-backend/demo-media/default-artwork.mp4"
+            }
           ]
         }
+      }
+    },
+    {
+      "name": "06 Мой черновик",
+      "protocolProfileBehavior": {
+        "disableCookies": true
       },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "pm.test('Черновик создан', () => pm.response.to.have.status(201));"
-      ] } }]
-    },
-    {
-      "name": "06 Получить свой черновик",
-      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts/draft" }
-    },
-    {
-      "name": "07 Публикация гостем запрещена",
       "request": {
-        "method": "PUT",
-        "url": "http://127.0.0.1:3002/api/artwork_excerpts/21/publication",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}", "options": { "raw": { "language": "json" } } }
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts/draft",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
       }
     },
     {
-      "name": "08 Опубликовать свой черновик",
+      "name": "07 Публикация без cookie",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3002/api/artwork_excerpts/21/publication",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"shortDescription\": \"Краткое описание отрывка\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}", "options": { "raw": { "language": "json" } } }
+        "url": "http://localhost:3002/api/artwork_excerpts/22/publication",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"shortDescription\": \"Краткий отрывок произведения для показа исправлений\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
       }
     },
     {
-      "name": "09 Выйти и удалить сессию",
-      "request": { "method": "POST", "url": "http://localhost:3002/api/sessions/logout" }
+      "name": "08 Публикация с cookie",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3002/api/artwork_excerpts/22/publication",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"shortDescription\": \"Краткий отрывок произведения для показа исправлений\",\n  \"artworkCreationDate\": \"1866-01-01\",\n  \"citationCount\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
     },
     {
-      "name": "10 Проверить запрет после выхода",
-      "request": { "method": "GET", "url": "http://localhost:3002/api/artwork_excerpts/draft" }
+      "name": "09 Выход",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3002/api/sessions/logout",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "10 Проверка после выхода",
+      "protocolProfileBehavior": {
+        "disableCookies": true
+      },
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3002/api/artwork_excerpts/draft",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sessionId=PASTE_SESSION_ID",
+            "type": "text",
+            "disabled": false
+          }
+        ]
+      }
     }
   ]
 }
