@@ -286,9 +286,6 @@
         <mxCell id="er-78" value="0..*" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;fontColor=#000000;fontFamily=Arial;fontSize=15;fontStyle=0;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="662" y="650" width="44" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="er-79" value="N — допускается NULL   U — уникальное поле&#10;UNIQUE (user_id, artwork_excerpt_id)" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;fontColor=#000000;fontFamily=Arial;fontSize=15;fontStyle=0;align=center;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="155" y="717" width="530" height="45" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
